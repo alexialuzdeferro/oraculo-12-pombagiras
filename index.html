@@ -23,12 +23,17 @@
             --preto-cetim: #1a1a1a;
             --ouro: #ffd700;
             --ouro-brilho: #fff176;
+            --verde-acerto: #00c853;
+            --vermelho-erro: #ff1744;
+            --rosa-pombagira: #e91e63;
             
             /* Glassmorphism Effects */
             --vidro-branco: rgba(255, 255, 255, 0.08);
             --vidro-roxo: rgba(123, 31, 162, 0.15);
             --vidro-vermelho: rgba(255, 61, 0, 0.12);
             --vidro-ouro: rgba(255, 215, 0, 0.1);
+            --vidro-verde: rgba(0, 200, 83, 0.1);
+            --vidro-rosa: rgba(233, 30, 99, 0.1);
             --sombra-vidro: 0 8px 32px rgba(0, 0, 0, 0.3);
             --sombra-vidro-intensa: 0 12px 40px rgba(0, 0, 0, 0.4);
             --borda-vidro: 1px solid rgba(255, 255, 255, 0.1);
@@ -38,11 +43,15 @@
             --gradiente-roxo: linear-gradient(135deg, var(--roxo-profundo), var(--roxo-vibrante));
             --gradiente-fogo: linear-gradient(135deg, var(--vermelho-sangue), var(--vermelho-fogo));
             --gradiente-ouro: linear-gradient(135deg, var(--ouro), var(--ouro-brilho));
+            --gradiente-acerto: linear-gradient(135deg, var(--verde-acerto), #69f0ae);
+            --gradiente-erro: linear-gradient(135deg, var(--vermelho-erro), #ff5252);
             
             /* Efeitos de brilho */
             --brilho-ouro: 0 0 20px rgba(255, 215, 0, 0.5);
             --brilho-roxo: 0 0 20px rgba(123, 31, 162, 0.5);
             --brilho-vermelho: 0 0 20px rgba(255, 61, 0, 0.5);
+            --brilho-verde: 0 0 20px rgba(0, 200, 83, 0.5);
+            --brilho-rosa: 0 0 20px rgba(233, 30, 99, 0.5);
         }
 
         body {
@@ -70,6 +79,133 @@
                 radial-gradient(circle at 80% 80%, rgba(255, 61, 0, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* ========== CONTADORES DE FÉ & GRATIDÃO ========== */
+        #contadores-fe {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contador-item {
+            padding: 8px 16px;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            min-width: 180px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .contador-item.fe {
+            border-color: rgba(255, 215, 0, 0.3);
+            color: var(--ouro);
+        }
+
+        .contador-item.gratidao {
+            border-color: rgba(233, 30, 99, 0.3);
+            color: var(--rosa-pombagira);
+        }
+
+        .contador-item .icone {
+            font-size: 16px;
+        }
+
+        .contador-item .valor {
+            font-weight: 700;
+            font-size: 16px;
+            margin-left: auto;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        /* ========== CONTADOR GLASS DISCRETO ========== */
+        #contador-glass {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(10, 10, 10, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        #contador-glass:hover {
+            background: rgba(10, 10, 10, 0.3);
+        }
+
+        #contador-glass .icone {
+            font-size: 14px;
+        }
+
+        #contador-glass .texto {
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        #contador-glass .numero {
+            font-weight: 700;
+            color: var(--ouro);
+            font-size: 14px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        /* ========== PARTÍCULAS DE CHUVA DE BÊNÇÃO ========== */
+        #chuva-bencao {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particula {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: cair linear infinite;
+        }
+
+        @keyframes cair {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* ========== GLASSMORPHISM UTILITIES ========== */
@@ -102,60 +238,19 @@
             border: var(--borda-vidro-dourada);
             box-shadow: var(--sombra-vidro-intensa), var(--brilho-ouro);
         }
-        
-        /* ========== CONTADOR GLASS - MAIS DISCRETO E SUTIL ========== */
-        #contador-glass {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 6px 12px; /* Reduzido o padding */
-            z-index: 1000;
-            /* Efeito glassmorphism mais sutil e escuro */
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
-            background: rgba(10, 10, 10, 0.2); /* Fundo mais escuro */
-            border: 1px solid rgba(255, 255, 255, 0.05); /* Borda quase invisível */
-            border-radius: 50px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
-            font-size: 13px; 
-            color: rgba(255, 255, 255, 0.7); 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            cursor: default; 
-            user-select: none;
+
+        .glass-panel-verde {
+            background: var(--vidro-verde);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 200, 83, 0.3);
+            box-shadow: var(--sombra-vidro-intensa), var(--brilho-verde);
         }
 
-        #contador-glass:hover {
-            background: rgba(10, 10, 10, 0.3); 
-            transform: none; /* Sem movimento no hover */
-        }
-
-        #contador-glass .icone {
-            font-size: 14px; 
-            animation: none; 
-        }
-
-        #contador-glass .texto {
-            opacity: 0.7; /* Texto 'Consultas' mais discreto */
-            font-weight: 300;
-        }
-
-        #contador-glass .numero {
-            font-weight: 700;
-            color: var(--ouro);
-            font-size: 14px;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-        
-        #contador-glass .status {
-            display: none; /* Mantido oculto para discrição */
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
+        .glass-panel-rosa {
+            background: var(--vidro-rosa);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 30, 99, 0.3);
+            box-shadow: var(--sombra-vidro-intensa), var(--brilho-rosa);
         }
 
         /* ========== CONTAINER PRINCIPAL ========== */
@@ -164,7 +259,7 @@
             margin: 0 auto;
             padding: 30px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* ========== HEADER GLASS ========== */
@@ -325,6 +420,10 @@
             margin-bottom: 30px;
             color: var(--ouro);
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .quiz-opcoes {
@@ -340,25 +439,45 @@
             text-align: left;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .quiz-opcao:hover {
-            transform: translateX(10px);
+            transform: translateX(5px);
             box-shadow: 
                 0 5px 20px rgba(0, 0, 0, 0.3),
                 0 0 20px rgba(123, 31, 162, 0.2);
         }
 
         .quiz-opcao.correta {
-            background: rgba(0, 255, 136, 0.15);
-            border-color: rgba(0, 255, 136, 0.3);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            animation: acerto 0.6s ease;
+            background: var(--gradiente-acerto);
+            border-color: rgba(0, 200, 83, 0.3);
+            box-shadow: 0 0 30px rgba(0, 200, 83, 0.3);
         }
 
         .quiz-opcao.incorreta {
-            background: rgba(255, 61, 0, 0.15);
-            border-color: rgba(255, 61, 0, 0.3);
-            box-shadow: 0 0 20px rgba(255, 61, 0, 0.3);
+            animation: erro 0.6s ease;
+            background: var(--gradiente-erro);
+            border-color: rgba(255, 23, 68, 0.3);
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.3);
+        }
+
+        @keyframes acerto {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(0, 200, 83, 0.5); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes erro {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.98); box-shadow: 0 0 40px rgba(255, 23, 68, 0.5); }
+            100% { transform: scale(1); }
+        }
+
+        .quiz-opcao.selecionada {
+            transform: scale(1.02);
         }
 
         .quiz-botoes {
@@ -379,6 +498,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .botao-glass::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            transition: transform 0.5s ease;
+        }
+
+        .botao-glass:hover::after {
+            transform: rotate(45deg) translateX(100px);
         }
 
         .botao-principal {
@@ -432,12 +574,24 @@
             color: var(--ouro);
             margin-bottom: 20px;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: pulse-titulo 2s infinite;
+        }
+
+        @keyframes pulse-titulo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .pombagira-resultado {
             max-width: 800px;
             margin: 0 auto 40px;
             padding: 30px;
+            animation: aparecer-resultado 1s ease;
+        }
+
+        @keyframes aparecer-resultado {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .pombagira-imagem {
@@ -454,6 +608,12 @@
             align-items: center;
             justify-content: center;
             font-size: 4rem;
+            animation: brilhar 3s infinite alternate;
+        }
+
+        @keyframes brilhar {
+            0% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 60px rgba(255, 215, 0, 0.8), 0 0 80px rgba(123, 31, 162, 0.6); }
         }
 
         .mensagem-audio {
@@ -464,6 +624,30 @@
             border-left: 3px solid var(--ouro);
             text-align: left;
             background: rgba(0, 0, 0, 0.2);
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* ========== FEEDBACK ANIMAÇÕES ========== */
+        .feedback-acerto {
+            animation: feedbackAcerto 0.5s ease;
+            color: var(--verde-acerto) !important;
+        }
+
+        .feedback-erro {
+            animation: feedbackErro 0.5s ease;
+            color: var(--vermelho-erro) !important;
+        }
+
+        @keyframes feedbackAcerto {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px var(--verde-acerto); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes feedbackErro {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); text-shadow: 0 0 20px var(--vermelho-erro); }
+            100% { transform: scale(1); }
         }
 
         /* ========== RESPONSIVO ========== */
@@ -501,6 +685,17 @@
                 min-width: 160px;
                 font-size: 0.9rem;
             }
+
+            .contador-item {
+                min-width: 150px;
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            #contadores-fe {
+                top: 10px;
+                left: 10px;
+            }
         }
 
         /* ========== ANIMAÇÕES ========== */
@@ -518,19 +713,74 @@
         .animar-entrada {
             animation: aparecer 0.6s ease forwards;
         }
+
+        /* ========== EFEITO DE CONFETTI ========== */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--ouro);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ========== PULSE ANIMATION ========== */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
     </style>
 </head>
 <body>
+    <!-- Chuva de bênção com símbolos sagrados -->
+    <div id="chuva-bencao"></div>
+
+    <!-- Contadores de Fé e Gratidão -->
+    <div id="contadores-fe">
+        <div class="contador-item fe">
+            <span class="icone">🙏</span>
+            <span>Fé</span>
+            <span class="valor" id="contador-fe">0</span>
+        </div>
+        <div class="contador-item gratidao">
+            <span class="icone">💖</span>
+            <span>Gratidão</span>
+            <span class="valor" id="contador-gratidao">0</span>
+        </div>
+        <div class="contador-item">
+            <span class="icone">⭐</span>
+            <span>Acertos</span>
+            <span class="valor" id="contador-acertos">0</span>
+        </div>
+    </div>
+
+    <!-- Contador discreto de consultas -->
     <div id="contador-glass" title="Total de Consultas ao Oráculo">
         <span class="icone">👁️</span>
         <span class="texto">Consultas:</span>
         <span class="numero" id="contador-numero">...</span>
     </div>
 
+    <!-- Áudio para efeitos sonoros -->
+    <audio id="som-acerto" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="som-erro" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="som-resultado" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkles-300.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         <header class="header-glass glass-panel-roxo animar-entrada">
             <h1 class="titulo-principal">Oráculo das 12 Pombagiras</h1>
-            <p class="subtitulo">12 Perguntas para Revelar sua Guia Espiritual</p>
+            <p class="subtitulo">12 Perguntas Sagradas para Revelar sua Guia Espiritual</p>
             
             <div class="quiz-botoes" style="margin-top: 30px;">
                 <button class="botao-glass botao-principal" onclick="iniciarQuiz()">
@@ -550,7 +800,8 @@
             </div>
             
             <div class="secao-pombagiras" id="container-pombagiras">
-                </div>
+                <!-- Pombagiras serão inseridas aqui pelo JavaScript -->
+            </div>
         </div>
 
         <div id="quiz-section" class="quiz-container glass-panel-roxo animar-entrada" style="display: none;">
@@ -559,7 +810,8 @@
             </div>
             
             <div class="quiz-opcoes" id="opcoes-container">
-                </div>
+                <!-- Opções serão inseridas aqui -->
+            </div>
             
             <div class="quiz-botoes">
                 <button class="botao-glass botao-secundario" onclick="pularPergunta()" id="pular-btn">
@@ -587,7 +839,8 @@
             <h2 class="resultado-titulo">Sua Pombagira Guia é:</h2>
             
             <div id="pombagira-resultado" class="pombagira-resultado glass-panel-roxo">
-                </div>
+                <!-- Resultado será inserido aqui -->
+            </div>
             
             <div class="quiz-botoes">
                 <button class="botao-glass botao-principal" onclick="compartilharResultado()">
@@ -595,6 +848,9 @@
                 </button>
                 <button class="botao-glass botao-secundario" onclick="voltarParaInicio()">
                     🏠 Voltar ao Início
+                </button>
+                <button class="botao-glass botao-secundario" onclick="refazerQuiz()">
+                    🔄 Refazer Quiz
                 </button>
             </div>
         </div>
@@ -607,68 +863,20 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ========== SISTEMA DE CONTADOR DINÂMICO E ATÔMICO (CORREÇÃO CRÍTICA) ==========
-        async function initContador() {
-            try {
-                // Tenta incrementar o valor diretamente no banco de forma ATÔMICA
-                const { data: updateData, error: updateError } = await supabase
-                    .from('oraculo_pombagira')
-                    .update({ 
-                        total_consultas: 'total_consultas + 1', // Sinaliza ao PostgREST para fazer o incremento SQL
-                        atualizado_em: new Date().toISOString()
-                    })
-                    .eq('nome', 'oraculo_12_pombagiras')
-                    .select('total_consultas') // Tenta obter o valor atualizado
-                    .single();
+        // ========== VARIÁVEIS GLOBAIS ==========
+        let perguntasQuiz = [];
+        let perguntaAtual = 0;
+        let respostasUsuario = [];
+        let pontos = 0;
+        let pombagiraResultado = null;
+        let contadorFe = 0;
+        let contadorGratidao = 0;
+        let contadorAcertos = 0;
+        let quizEmAndamento = false;
 
-                if (updateError) {
-                    // Se o erro é "não encontrado" (PGRST116), tenta INSERIR o registro
-                    if (updateError.code === 'PGRST116' || (updateError.details && updateError.details.includes('0 rows'))) {
-                        
-                        const { data: insertData, error: insertError } = await supabase
-                            .from('oraculo_pombagira')
-                            .insert([{
-                                nome: 'oraculo_12_pombagiras',
-                                total_consultas: 1
-                            }])
-                            .select('total_consultas')
-                            .single();
-                        
-                        if (insertError) throw insertError;
-                        
-                        document.getElementById('contador-numero').textContent = insertData.total_consultas;
-                        return;
-                    }
-                    // Se for outro erro, lança
-                    throw updateError;
-                }
+        // ========== SÍMBOLOS PARA CHUVA DE BÊNÇÃO ==========
+        const simbolosSagrados = ['🌹', '⭐', '🔱', '💀', '🥂', '🎭', '⚔️', '🔮', '👑', '💃', '🌿', '🌙'];
 
-                // Se a atualização foi bem-sucedida, mostra o novo valor
-                if (updateData) {
-                    document.getElementById('contador-numero').textContent = updateData.total_consultas;
-                } else {
-                    // Fallback para buscar o valor se o .select() falhar por algum motivo de RLS ou configuração
-                    const { data: finalData } = await supabase
-                        .from('oraculo_pombagira')
-                        .select('total_consultas')
-                        .eq('nome', 'oraculo_12_pombagiras')
-                        .single();
-                    document.getElementById('contador-numero').textContent = finalData?.total_consultas || '0';
-                }
-
-            } catch (error) {
-                console.error('❌ Falha na comunicação Supabase. Usando contador local temporário:', error);
-                
-                // Fallback: Incrementa contador local (simplesmente exibe algo)
-                let localCount = localStorage.getItem('oraculo_local_count') || 0;
-                localCount = parseInt(localCount) + 1;
-                localStorage.setItem('oraculo_local_count', localCount);
-                
-                // Para não confundir, exibe um valor local aproximado (simplesmente o último valor sync + local)
-                document.getElementById('contador-numero').textContent = `~${localCount}`;
-            }
-        }
-        
         // ========== DADOS FIXOS DAS POMBAGIRAS ==========
         const pombagiras = [
             {
@@ -829,157 +1037,341 @@
             }
         ];
 
-        // ========== VARIÁVEIS DO QUIZ ==========
-        let perguntasQuiz = [];
-        let perguntaAtual = 0;
-        let respostasUsuario = [];
-        let pontos = 0;
-        let pombagiraResultado = null;
+        // ========== FUNÇÕES DE INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✨ Oráculo das 12 Pombagiras iniciando...');
+            iniciarChuvaBencao();
+            carregarContadoresLocais();
+            initContador();
+            carregarPerguntas();
+            exibirTodasPombagiras();
+        });
+
+        // ========== CHUVA DE BÊNÇÃO ==========
+        function iniciarChuvaBencao() {
+            const container = document.getElementById('chuva-bencao');
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    criarParticula(container);
+                }, i * 300);
+            }
+            
+            // Criar novas partículas periodicamente
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    criarParticula(container);
+                }
+            }, 1000);
+        }
+
+        function criarParticula(container) {
+            const particula = document.createElement('div');
+            particula.className = 'particula';
+            particula.textContent = simbolosSagrados[Math.floor(Math.random() * simbolosSagrados.length)];
+            
+            // Posição aleatória
+            particula.style.left = Math.random() * 100 + '%';
+            particula.style.fontSize = (Math.random() * 24 + 16) + 'px';
+            
+            // Cor aleatória
+            const cores = ['#ffd700', '#e91e63', '#c62828', '#7b1fa2', '#4a148c'];
+            particula.style.color = cores[Math.floor(Math.random() * cores.length)];
+            
+            // Duração e delay aleatórios
+            const duration = Math.random() * 10 + 15;
+            const delay = Math.random() * 5;
+            particula.style.animationDuration = duration + 's';
+            particula.style.animationDelay = delay + 's';
+            
+            container.appendChild(particula);
+            
+            // Remover após animação
+            setTimeout(() => {
+                if (particula.parentNode) {
+                    particula.parentNode.removeChild(particula);
+                }
+            }, (duration + delay) * 1000);
+        }
+
+        // ========== SISTEMA DE CONTADOR DINÂMICO ==========
+        async function initContador() {
+            try {
+                // Primeiro tenta incrementar
+                const { data: updateData, error: updateError } = await supabase
+                    .from('oraculo_pombagira')
+                    .update({ 
+                        total_consultas: 'total_consultas + 1',
+                        atualizado_em: new Date().toISOString()
+                    })
+                    .eq('nome', 'oraculo_12_pombagiras')
+                    .select('total_consultas')
+                    .single();
+
+                if (updateError) {
+                    // Se não existir, cria
+                    if (updateError.code === 'PGRST116') {
+                        const { data: insertData, error: insertError } = await supabase
+                            .from('oraculo_pombagira')
+                            .insert([{
+                                nome: 'oraculo_12_pombagiras',
+                                total_consultas: 1
+                            }])
+                            .select('total_consultas')
+                            .single();
+                        
+                        if (insertError) throw insertError;
+                        
+                        document.getElementById('contador-numero').textContent = insertData.total_consultas;
+                        return;
+                    }
+                    throw updateError;
+                }
+
+                if (updateData) {
+                    document.getElementById('contador-numero').textContent = updateData.total_consultas;
+                }
+
+            } catch (error) {
+                console.error('❌ Erro no contador Supabase:', error);
+                // Fallback local
+                let localCount = localStorage.getItem('oraculo_local_count') || 0;
+                localCount = parseInt(localCount) + 1;
+                localStorage.setItem('oraculo_local_count', localCount);
+                document.getElementById('contador-numero').textContent = `~${localCount}`;
+            }
+        }
+
+        // ========== CONTADORES LOCAIS (FÉ, GRATIDÃO, ACERTOS) ==========
+        function carregarContadoresLocais() {
+            contadorFe = parseInt(localStorage.getItem('contadorFe')) || 0;
+            contadorGratidao = parseInt(localStorage.getItem('contadorGratidao')) || 0;
+            contadorAcertos = parseInt(localStorage.getItem('contadorAcertos')) || 0;
+            
+            atualizarContadoresDisplay();
+        }
+
+        function atualizarContadoresDisplay() {
+            document.getElementById('contador-fe').textContent = contadorFe;
+            document.getElementById('contador-gratidao').textContent = contadorGratidao;
+            document.getElementById('contador-acertos').textContent = contadorAcertos;
+            
+            // Efeito visual nos contadores
+            const contadores = document.querySelectorAll('.contador-item .valor');
+            contadores.forEach(contador => {
+                contador.classList.add('pulse');
+                setTimeout(() => contador.classList.remove('pulse'), 1000);
+            });
+        }
+
+        function incrementarContador(tipo) {
+            switch(tipo) {
+                case 'fe':
+                    contadorFe++;
+                    localStorage.setItem('contadorFe', contadorFe);
+                    break;
+                case 'gratidao':
+                    contadorGratidao++;
+                    localStorage.setItem('contadorGratidao', contadorGratidao);
+                    break;
+                case 'acerto':
+                    contadorAcertos++;
+                    localStorage.setItem('contadorAcertos', contadorAcertos);
+                    break;
+            }
+            atualizarContadoresDisplay();
+        }
 
         // ========== SISTEMA DE PERGUNTAS DINÂMICAS ==========
         async function carregarPerguntas() {
             try {
-                // Busca todas as perguntas ativas
+                // Busca 12 perguntas aleatórias ativas
                 const { data: perguntasDB, error } = await supabase
                     .from('perguntas_pombagira')
                     .select('*')
-                    .eq('ativa', true); 
+                    .eq('ativa', true)
+                    .limit(50); // Pega até 50 perguntas ativas
                 
                 if (error) throw error;
 
-                if (perguntasDB && perguntasDB.length > 0) {
-                    // Embaralha no cliente para garantir ordem dinâmica a cada acesso
-                    perguntasQuiz = embaralharArray(perguntasDB).slice(0, 12); // Limita a 12
-                    console.log(`✅ ${perguntasQuiz.length} perguntas carregadas e embaralhadas do Supabase`);
+                if (perguntasDB && perguntasDB.length >= 12) {
+                    // Embaralha e pega 12 perguntas
+                    perguntasQuiz = embaralharArray(perguntasDB).slice(0, 12);
+                    console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
+                    
+                    // Registra uso das perguntas selecionadas
+                    perguntasQuiz.forEach(pergunta => {
+                        registrarUsoPerguntaNoSupabase(pergunta.id);
+                    });
                 } else {
-                    // Fallback se o Supabase não retornar nada
-                    perguntasQuiz = gerar12PerguntasFixas(); 
+                    // Fallback para perguntas fixas
+                    perguntasQuiz = gerar12PerguntasFixas();
                     perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
-                    console.log('⚠️ Supabase não retornou perguntas. Usando perguntas fixas embaralhadas.');
+                    console.log('⚠️ Usando perguntas fixas');
                 }
                 
             } catch (error) {
-                console.error('❌ Erro ao carregar perguntas, usando fallback:', error);
+                console.error('❌ Erro ao carregar perguntas:', error);
                 perguntasQuiz = gerar12PerguntasFixas();
                 perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
             }
         }
 
+        async function registrarUsoPerguntaNoSupabase(perguntaId) {
+            try {
+                await supabase
+                    .from('perguntas_pombagira')
+                    .update({ 
+                        vezes_usada: 'vezes_usada + 1',
+                        ultimo_uso: new Date().toISOString()
+                    })
+                    .eq('id', perguntaId);
+            } catch (error) {
+                console.error('❌ Erro ao registrar uso da pergunta:', error);
+            }
+        }
+
         function gerar12PerguntasFixas() {
-            // Este é o fallback em caso de falha TOTAL do Supabase
             return [
                 {
+                    id: 1,
                     pergunta: "Qual saudação abre os caminhos na gira?",
                     opcao_a: "Saravá",
                     opcao_b: "Laroyê Exu",
                     opcao_c: "Axé",
                     resposta_correta: "b",
-                    explicacao: "Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar."
+                    explicacao: "Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar.",
+                    nivel_dificuldade: 1
                 },
                 {
+                    id: 2,
                     pergunta: "Maria Padilha atua principalmente em qual encruzilhada?",
                     opcao_a: "De terra",
                     opcao_b: "De vento",
                     opcao_c: "De fogo",
                     resposta_correta: "a",
-                    explicacao: "Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material."
+                    explicacao: "Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material.",
+                    nivel_dificuldade: 2
                 },
                 {
+                    id: 3,
                     pergunta: "Qual elemento representa Maria Mulambo?",
                     opcao_a: "Fogo",
                     opcao_b: "Terra",
                     opcao_c: "Água",
                     resposta_correta: "b",
-                    explicacao: "Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade."
+                    explicacao: "Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade.",
+                    nivel_dificuldade: 2
                 },
                 {
+                    id: 4,
                     pergunta: "Qual dia da semana é mais forte para Pombagira Cigana?",
                     opcao_a: "Segunda-feira",
                     opcao_b: "Quarta-feira",
                     opcao_c: "Sexta-feira",
                     resposta_correta: "b",
-                    explicacao: "Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana."
+                    explicacao: "Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana.",
+                    nivel_dificuldade: 3
                 },
                 {
+                    id: 5,
                     pergunta: "O que simboliza a navalha de Maria Navalha?",
                     opcao_a: "Beleza",
                     opcao_b: "Defesa e astúcia",
                     opcao_c: "Riqueza",
                     resposta_correta: "b",
-                    explicacao: "A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver."
+                    explicacao: "A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver.",
+                    nivel_dificuldade: 3
                 },
                 {
+                    id: 6,
                     pergunta: "Qual Pombagira está ligada às águas e emoções?",
                     opcao_a: "Maria Padilha",
                     opcao_b: "Pombagira da Praia",
                     opcao_c: "Rosa Caveira",
                     resposta_correta: "b",
-                    explicacao: "Pombagira da Praia trabalha com as águas e a purificação emocional."
+                    explicacao: "Pombagira da Praia trabalha com as águas e a purificação emocional.",
+                    nivel_dificuldade: 2
                 },
                 {
+                    id: 7,
                     pergunta: "Qual Pombagira é conhecida como \"Rainha das Encruzilhadas\"?",
                     opcao_a: "Maria Mulambo",
                     opcao_b: "Maria Padilha",
                     opcao_c: "Pombagira Cigana",
                     resposta_correta: "b",
-                    explicacao: "Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos."
+                    explicacao: "Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos.",
+                    nivel_dificuldade: 3
                 },
                 {
+                    id: 8,
                     pergunta: "Qual cor está mais associada a Rosa Caveira?",
                     opcao_a: "Azul",
                     opcao_b: "Preto e Vermelho",
                     opcao_c: "Verde",
                     resposta_correta: "b",
-                    explicacao: "Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação)."
+                    explicacao: "Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação).",
+                    nivel_dificuldade: 4
                 },
                 {
+                    id: 9,
                     pergunta: "Sete Saias representa qual energia principal?",
                     opcao_a: "Tristeza",
                     opcao_b: "Alegria e dança",
                     opcao_c: "Sério",
                     resposta_correta: "b",
-                    explicacao: "Sete Saias traz a energia da alegria, dança e celebração da vida."
+                    explicacao: "Sete Saias traz a energia da alegria, dança e celebração da vida.",
+                    nivel_dificuldade: 2
                 },
                 {
+                    id: 10,
                     pergunta: "Pombagira da Figueira conecta com o quê?",
                     opcao_a: "Futuro",
                     opcao_b: "Ancestralidade",
                     opcao_c: "Viagens",
                     resposta_correta: "b",
-                    explicacao: "Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares."
+                    explicacao: "Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares.",
+                    nivel_dificuldade: 3
                 },
                 {
+                    id: 11,
                     pergunta: "Qual oferenda é tradicional para Maria Navalha?",
                     opcao_a: "Champagne",
                     opcao_b: "Cachaça",
                     opcao_c: "Vinho",
                     resposta_correta: "b",
-                    explicacao: "Maria Navalha aceita cachaça como oferenda, representando a força do povo."
+                    explicacao: "Maria Navalha aceita cachaça como oferenda, representando a força do povo.",
+                    nivel_dificuldade: 4
                 },
                 {
+                    id: 12,
                     pergunta: "Dama da Noite atua principalmente em qual período?",
                     opcao_a: "Manhã",
                     opcao_b: "Noite",
                     opcao_c: "Tarde",
                     resposta_correta: "b",
-                    explicacao: "Dama da Noite trabalha com os mistérios e segredos que surgem à noite."
+                    explicacao: "Dama da Noite trabalha com os mistérios e segredos que surgem à noite.",
+                    nivel_dificuldade: 3
                 }
             ];
         }
 
-        // ========== INTERFACE E LÓGICA DO QUIZ ==========
+        // ========== FUNÇÕES DO QUIZ ==========
         function iniciarQuiz() {
+            quizEmAndamento = true;
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
             document.getElementById('quiz-section').style.display = 'block';
             document.getElementById('resultado-section').style.display = 'none';
             
-            // Recarrega e embaralha as perguntas (dinâmico)
+            perguntaAtual = 0;
+            respostasUsuario = [];
+            pontos = 0;
+            
+            // Carrega perguntas novas a cada quiz
             carregarPerguntas().then(() => {
-                perguntaAtual = 0;
-                respostasUsuario = [];
-                pontos = 0;
                 mostrarPergunta();
+                criarConfetti(); // Efeito de confetti ao iniciar
             });
         }
 
@@ -1045,6 +1437,7 @@
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
             document.getElementById('quiz-section').style.display = 'none';
             document.getElementById('resultado-section').style.display = 'none';
+            quizEmAndamento = false;
         }
 
         function mostrarPergunta() {
@@ -1081,24 +1474,44 @@
             document.getElementById('proxima-btn').style.display = 'none';
             document.getElementById('pular-btn').style.display = 'block';
             document.getElementById('feedback-container').innerHTML = '';
+            
+            // Efeito de entrada na pergunta
+            container.style.animation = 'aparecer 0.5s ease';
         }
 
         function selecionarResposta(letra, elemento) {
+            if (elemento.classList.contains('selecionada')) return;
+            
+            elemento.classList.add('selecionada');
             const pergunta = perguntasQuiz[perguntaAtual];
             const correta = letra === pergunta.resposta_correta;
             
+            // Desativa outras opções
             document.querySelectorAll('.quiz-opcao').forEach(btn => {
                 btn.style.pointerEvents = 'none';
             });
             
+            // Efeitos visuais e sonoros
             if (correta) {
                 elemento.classList.add('correta');
                 pontos += 10;
-                mostrarFeedback('✅ Resposta Correta!', 'verde');
+                incrementarContador('acerto');
+                incrementarContador('fe'); // Aumenta fé ao acertar
+                tocarSom('acerto');
+                mostrarFeedback('✅ Resposta Correta! +10 pontos', 'verde', pergunta.explicacao);
+                
+                // Efeito visual no contador de fé
+                document.getElementById('contador-fe').classList.add('feedback-acerto');
+                setTimeout(() => {
+                    document.getElementById('contador-fe').classList.remove('feedback-acerto');
+                }, 1000);
             } else {
                 elemento.classList.add('incorreta');
-                mostrarFeedback('❌ Resposta Incorreta', 'vermelho');
+                incrementarContador('gratidao'); // Aumenta gratidão mesmo ao errar
+                tocarSom('erro');
+                mostrarFeedback('❌ Resposta Incorreta', 'vermelho', pergunta.explicacao);
                 
+                // Mostra a resposta correta
                 const letraCorreta = pergunta.resposta_correta;
                 const opcoes = document.querySelectorAll('.quiz-opcao');
                 opcoes.forEach(opcao => {
@@ -1106,6 +1519,12 @@
                         opcao.classList.add('correta');
                     }
                 });
+                
+                // Efeito visual no contador de gratidão
+                document.getElementById('contador-gratidao').classList.add('feedback-erro');
+                setTimeout(() => {
+                    document.getElementById('contador-gratidao').classList.remove('feedback-erro');
+                }, 1000);
             }
             
             respostasUsuario.push({
@@ -1117,15 +1536,28 @@
             
             document.getElementById('proxima-btn').style.display = 'block';
             document.getElementById('pular-btn').style.display = 'none';
+            
+            // Efeito de confetti para respostas
+            criarConfetti(correta ? '#00c853' : '#ff1744');
         }
 
-        function mostrarFeedback(mensagem, tipo) {
+        function tocarSom(tipo) {
+            try {
+                const som = document.getElementById(`som-${tipo}`);
+                som.currentTime = 0;
+                som.play();
+            } catch (error) {
+                console.log('Som não disponível');
+            }
+        }
+
+        function mostrarFeedback(mensagem, tipo, explicacao) {
             const container = document.getElementById('feedback-container');
             container.innerHTML = `
-                <div class="glass-panel" style="padding: 15px; border-color: ${tipo === 'verde' ? '#00ff88' : '#ff3d00'};">
-                    <strong>${mensagem}</strong>
-                    <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
-                        ${perguntasQuiz[perguntaAtual].explicacao}
+                <div class="glass-panel-${tipo === 'verde' ? 'verde' : 'vermelho'}" style="padding: 15px; animation: aparecer 0.5s ease;">
+                    <strong style="font-size: 1.1rem;">${mensagem}</strong>
+                    <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                        ${explicacao}
                     </p>
                 </div>
             `;
@@ -1134,6 +1566,7 @@
         function pularPergunta() {
             perguntaAtual++;
             mostrarPergunta();
+            incrementarContador('gratidao'); // Gratidão por pular - continua aprendendo
         }
 
         function proximaPergunta() {
@@ -1145,32 +1578,25 @@
             const maxPontos = 120;
             const porcentagem = (pontos / maxPontos) * 100;
             
+            // Lógica de atribuição baseada na pontuação
             let pombagiraIndex;
             
-            // Lógica de atribuição baseada na pontuação (mantida)
-            if (porcentagem >= 90) {
-                pombagiraIndex = 0; 
-            } else if (porcentagem >= 80) {
-                pombagiraIndex = 2; 
-            } else if (porcentagem >= 70) {
-                pombagiraIndex = 6; 
-            } else if (porcentagem >= 60) {
-                pombagiraIndex = 1; 
-            } else if (porcentagem >= 50) {
-                pombagiraIndex = 4; 
-            } else if (porcentagem >= 40) {
-                pombagiraIndex = 10; 
-            } else if (porcentagem >= 30) {
-                pombagiraIndex = 3; 
-            } else if (porcentagem >= 20) {
-                pombagiraIndex = 5; 
-            } else if (porcentagem >= 10) {
-                pombagiraIndex = 8; 
-            } else {
-                pombagiraIndex = 11; 
-            }
+            if (porcentagem >= 90) pombagiraIndex = 0; // Maria Padilha
+            else if (porcentagem >= 80) pombagiraIndex = 2; // Maria Quitéria
+            else if (porcentagem >= 70) pombagiraIndex = 6; // Cigana
+            else if (porcentagem >= 60) pombagiraIndex = 1; // Maria Mulambo
+            else if (porcentagem >= 50) pombagiraIndex = 4; // Dama da Noite
+            else if (porcentagem >= 40) pombagiraIndex = 10; // Maria Farrapo
+            else if (porcentagem >= 30) pombagiraIndex = 3; // Rosa Caveira
+            else if (porcentagem >= 20) pombagiraIndex = 5; // Sete Saias
+            else if (porcentagem >= 10) pombagiraIndex = 8; // Da Praia
+            else pombagiraIndex = 11; // Da Figueira
             
             pombagiraResultado = pombagiras[pombagiraIndex];
+            
+            // Efeitos ao finalizar
+            tocarSom('resultado');
+            criarConfettiEspecial();
             mostrarResultado();
         }
 
@@ -1186,48 +1612,61 @@
                         ${pombagiraResultado.icone}
                     </div>
                     
-                    <h3 style="font-size: 2rem; color: #FFD700; margin-bottom: 10px;">
+                    <h3 style="font-size: 2.5rem; color: #FFD700; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
                         ${pombagiraResultado.nome}
                     </h3>
                     
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px; font-size: 1.2rem;">
                         ${pombagiraResultado.dominio}
                     </p>
                     
                     <div style="margin: 25px 0;">
-                        <p style="line-height: 1.6; margin-bottom: 20px;">
+                        <p style="line-height: 1.6; margin-bottom: 20px; font-size: 1.1rem;">
                             ${pombagiraResultado.descricao}
                         </p>
                         
-                        <div class="mensagem-audio">
-                            <strong>🗣️ Mensagem da ${pombagiraResultado.nome}:</strong>
-                            <p style="margin-top: 10px;">"${pombagiraResultado.mensagemAudio}"</p>
+                        <div class="mensagem-audio glass-panel-ouro">
+                            <strong style="color: #FFD700; display: block; margin-bottom: 10px;">🗣️ Mensagem da ${pombagiraResultado.nome}:</strong>
+                            <p style="margin-top: 10px; font-size: 1.05rem;">"${pombagiraResultado.mensagemAudio}"</p>
                         </div>
                     </div>
                     
-                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 25px 0;">
-                        <div class="glass-panel" style="padding: 10px 20px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 30px 0;">
+                        <div class="glass-panel" style="padding: 15px 25px;">
                             <div style="font-size: 0.9rem; opacity: 0.8;">Pontuação Final</div>
-                            <div style="font-weight: bold;">${pontos} pontos</div>
+                            <div style="font-weight: bold; font-size: 1.3rem; color: #FFD700;">${pontos} pontos</div>
                         </div>
                         
-                        <div class="glass-panel" style="padding: 10px 20px;">
+                        <div class="glass-panel" style="padding: 15px 25px;">
                             <div style="font-size: 0.9rem; opacity: 0.8;">Dia Forte</div>
-                            <div style="font-weight: bold;">${pombagiraResultado.dias}</div>
+                            <div style="font-weight: bold; font-size: 1.3rem; color: ${pombagiraResultado.cores[0]};">${pombagiraResultado.dias}</div>
                         </div>
                         
-                        <div class="glass-panel" style="padding: 10px 20px;">
+                        <div class="glass-panel" style="padding: 15px 25px;">
                             <div style="font-size: 0.9rem; opacity: 0.8;">Elemento</div>
-                            <div style="font-weight: bold;">${pombagiraResultado.elemento}</div>
+                            <div style="font-weight: bold; font-size: 1.3rem; color: ${pombagiraResultado.cores[1] || pombagiraResultado.cores[0]};">${pombagiraResultado.elemento}</div>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 30px;">
-                        <h4 style="margin-bottom: 15px; color: #FFD700;">Oferendas Recomendadas:</h4>
-                        <p style="opacity: 0.9;">${pombagiraResultado.oferendas}</p>
+                    <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 15px;">
+                        <h4 style="margin-bottom: 15px; color: #FFD700; font-size: 1.2rem;">🎁 Oferendas Recomendadas:</h4>
+                        <p style="opacity: 0.9; font-size: 1.05rem;">${pombagiraResultado.oferendas}</p>
                     </div>
                 </div>
             `;
+            
+            // Efeito de zoom no resultado
+            setTimeout(() => {
+                container.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    container.style.transform = 'scale(1)';
+                }, 300);
+            }, 500);
+        }
+
+        function refazerQuiz() {
+            quizEmAndamento = false;
+            iniciarQuiz();
         }
 
         function compartilharResultado() {
@@ -1245,6 +1684,75 @@
             }
         }
 
+        // ========== EFEITOS VISUAIS ==========
+        function criarConfetti(cor = '#FFD700') {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = cor;
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.opacity = '1';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Animação
+                    confetti.style.transition = 'all 1s ease';
+                    setTimeout(() => {
+                        confetti.style.opacity = '0';
+                        confetti.style.transform = 'translateY(100px) rotate(360deg)';
+                    }, 10);
+                    
+                    // Remover após animação
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 1100);
+                }, i * 50);
+            }
+        }
+
+        function criarConfettiEspecial() {
+            const cores = ['#FFD700', '#E91E63', '#7B1FA2', '#4A148C', '#C62828'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '0%';
+                    confetti.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+                    confetti.style.width = Math.random() * 15 + 5 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+                    confetti.style.opacity = '1';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Animação mais elaborada
+                    const duration = Math.random() * 2 + 1;
+                    confetti.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.3, 1)`;
+                    
+                    setTimeout(() => {
+                        confetti.style.opacity = '0';
+                        confetti.style.transform = `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg) translateX(${Math.random() * 200 - 100}px)`;
+                    }, 10);
+                    
+                    // Remover após animação
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, (duration * 1000) + 100);
+                }, i * 30);
+            }
+        }
+
         // ========== UTILIDADES ==========
         function embaralharArray(array) {
             const novoArray = [...array];
@@ -1254,14 +1762,6 @@
             }
             return novoArray;
         }
-
-        // ========== INICIALIZAÇÃO ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✨ Oráculo das 12 Pombagiras iniciando...');
-            initContador(); // Inicia o contador e o incrementa (atomicamente)
-            carregarPerguntas(); // Pré-carrega as perguntas dinâmicas
-            exibirTodasPombagiras();
-        });
     </script>
 </body>
 </html>
