@@ -613,8 +613,169 @@
         // ========== CONFIGURAÇÃO SUPABASE ==========
         const SUPABASE_URL = 'https://qvbjwzszdijhydgcqvyu.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
-        
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ========== SISTEMA DE CONTADOR MELHORADO ==========
+        async function initContador() {
+            try {
+                console.log('🔮 Iniciando contador...');
+                
+                // SEMPRE tentar atualizar o Supabase primeiro
+                const resultado = await atualizarContadorSupabase();
+                
+                if (resultado.success) {
+                    // Supabase funcionou - usar valor do banco
+                    document.getElementById('contador-numero').textContent = resultado.total;
+                    atualizarStatusContador('online');
+                    console.log(`✅ Contador online: ${resultado.total} consultas`);
+                    
+                    // Sincronizar localStorage com Supabase
+                    localStorage.setItem('oraculo_sync_count', resultado.total);
+                } else {
+                    // Supabase falhou - usar modo offline
+                    console.warn('⚠️ Modo offline ativado');
+                    usarContadorOffline();
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro no contador:', error);
+                usarContadorOffline();
+            }
+        }
+
+        async function atualizarContadorSupabase() {
+            try {
+                // 1. Buscar contador atual
+                const { data: registro, error: buscaError } = await supabase
+                    .from('oraculo_pombagira')
+                    .select('total_consultas')
+                    .eq('nome', 'oraculo_12_pombagiras')
+                    .single();
+                
+                if (buscaError && buscaError.code !== 'PGRST116') {
+                    throw buscaError;
+                }
+                
+                let novaContagem;
+                
+                // 2. Se não existe registro, criar com 1
+                if (!registro) {
+                    novaContagem = 1;
+                    const { error: insertError } = await supabase
+                        .from('oraculo_pombagira')
+                        .insert([{
+                            nome: 'oraculo_12_pombagiras',
+                            total_consultas: novaContagem
+                        }]);
+                    
+                    if (insertError) throw insertError;
+                    
+                } else {
+                    // 3. Se existe, incrementar
+                    novaContagem = (registro.total_consultas || 0) + 1;
+                    const { error: updateError } = await supabase
+                        .from('oraculo_pombagira')
+                        .update({ 
+                            total_consultas: novaContagem,
+                            atualizado_em: new Date().toISOString()
+                        })
+                        .eq('nome', 'oraculo_12_pombagiras');
+                    
+                    if (updateError) throw updateError;
+                }
+                
+                return { success: true, total: novaContagem };
+                
+            } catch (error) {
+                console.error('Erro ao atualizar Supabase:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        function usarContadorOffline() {
+            // Verificar se já contou nesta sessão
+            if (!sessionStorage.getItem('oraculo_session_counted')) {
+                let localCount = localStorage.getItem('oraculo_local_count') || 0;
+                localCount = parseInt(localCount) + 1;
+                localStorage.setItem('oraculo_local_count', localCount);
+                sessionStorage.setItem('oraculo_session_counted', 'true');
+                
+                // Tentar sincronizar depois
+                setTimeout(tentarSincronizarOffline, 3000);
+            }
+            
+            // Mostrar contagem total (local + sync)
+            const localCount = parseInt(localStorage.getItem('oraculo_local_count') || 0);
+            const syncCount = parseInt(localStorage.getItem('oraculo_sync_count') || 0);
+            const totalDisplay = localCount + syncCount;
+            
+            document.getElementById('contador-numero').textContent = totalDisplay;
+            atualizarStatusContador('offline');
+            console.log(`📱 Contador offline: ${totalDisplay} (local: ${localCount}, sync: ${syncCount})`);
+        }
+
+        async function tentarSincronizarOffline() {
+            try {
+                const localCount = parseInt(localStorage.getItem('oraculo_local_count') || 0);
+                if (localCount > 0) {
+                    console.log('🔄 Tentando sincronizar contador offline...');
+                    
+                    const { data: registro } = await supabase
+                        .from('oraculo_pombagira')
+                        .select('total_consultas')
+                        .eq('nome', 'oraculo_12_pombagiras')
+                        .single();
+                    
+                    if (registro) {
+                        const novoTotal = (registro.total_consultas || 0) + localCount;
+                        
+                        await supabase
+                            .from('oraculo_pombagira')
+                            .update({ 
+                                total_consultas: novoTotal,
+                                atualizado_em: new Date().toISOString()
+                            })
+                            .eq('nome', 'oraculo_12_pombagiras');
+                        
+                        // Limpar contador local após sincronização
+                        localStorage.setItem('oraculo_local_count', 0);
+                        localStorage.setItem('oraculo_sync_count', novoTotal);
+                        
+                        console.log(`✅ Sincronizado: +${localCount} visitas`);
+                    }
+                }
+            } catch (error) {
+                console.log('📴 Ainda offline, tentando depois...');
+            }
+        }
+
+        function atualizarStatusContador(status) {
+            const statusDot = document.getElementById('contador-status');
+            if (!statusDot) return;
+            
+            if (status === 'online') {
+                statusDot.style.background = '#00ff88';
+                statusDot.style.boxShadow = '0 0 10px #00ff88';
+                statusDot.title = 'Conectado ao Supabase';
+            } else {
+                statusDot.style.background = '#FFA726';
+                statusDot.style.boxShadow = '0 0 10px #FFA726';
+                statusDot.title = 'Modo offline - sincronizando depois';
+            }
+        }
+
+        function animarContador() {
+            const numero = document.getElementById('contador-numero');
+            if (!numero) return;
+            
+            numero.style.transform = 'scale(1.3)';
+            numero.style.color = '#FFD700';
+            
+            setTimeout(() => {
+                numero.style.transform = 'scale(1)';
+                numero.style.color = '#FFD700';
+            }, 300);
+        }
 
         // ========== DADOS DAS 12 POMBAGIRAS ==========
         const pombagiras = [
@@ -783,140 +944,6 @@
         let pontos = 0;
         let pombagiraResultado = null;
 
-        // ========== INICIALIZAÇÃO ==========
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('✨ Oráculo das 12 Pombagiras iniciando...');
-            
-            // Iniciar contador
-            await initContador();
-            
-            // Carregar perguntas
-            await carregarPerguntas();
-            
-            // Exibir todas as Pombagiras
-            exibirTodasPombagiras();
-        });
-
-        // ========== CONTADOR SUPABASE ==========
-        async function initContador() {
-            try {
-                // Verificar se já visitou nesta sessão
-                if (!sessionStorage.getItem('oraculo_12_visitado')) {
-                    await incrementarContador();
-                    sessionStorage.setItem('oraculo_12_visitado', 'true');
-                    atualizarStatusContador('online');
-                } else {
-                    await mostrarContagemAtual();
-                    atualizarStatusContador('online');
-                }
-                
-            } catch (error) {
-                console.warn('⚠️ Modo offline:', error.message);
-                usarContadorOffline();
-            }
-        }
-
-        async function incrementarContador() {
-            try {
-                // Buscar contagem atual
-                const { data: registroAtual, error: erroBusca } = await supabase
-                    .from('oraculo_pombagira')
-                    .select('total_consultas')
-                    .eq('nome', 'oraculo_12_pombagiras')
-                    .single();
-                
-                let novaContagem = 1;
-                
-                if (!erroBusca && registroAtual) {
-                    // Atualizar existente
-                    novaContagem = (registroAtual.total_consultas || 0) + 1;
-                    const { error: erroAtualizar } = await supabase
-                        .from('oraculo_pombagira')
-                        .update({ 
-                            total_consultas: novaContagem,
-                            atualizado_em: new Date().toISOString()
-                        })
-                        .eq('nome', 'oraculo_12_pombagiras');
-                    
-                    if (erroAtualizar) throw erroAtualizar;
-                } else {
-                    // Criar novo (fallback)
-                    const { error: erroCriar } = await supabase
-                        .from('oraculo_pombagira')
-                        .insert([{
-                            nome: 'oraculo_12_pombagiras',
-                            total_consultas: novaContagem
-                        }]);
-                    
-                    if (erroCriar) throw erroCriar;
-                }
-                
-                // Atualizar display
-                document.getElementById('contador-numero').textContent = novaContagem;
-                animarContador();
-                console.log(`✅ Contador: ${novaContagem} consultas`);
-                
-            } catch (error) {
-                console.error('❌ Erro no contador:', error);
-                throw error;
-            }
-        }
-
-        async function mostrarContagemAtual() {
-            try {
-                const { data } = await supabase
-                    .from('oraculo_pombagira')
-                    .select('total_consultas')
-                    .eq('nome', 'oraculo_12_pombagiras')
-                    .single();
-                
-                if (data) {
-                    document.getElementById('contador-numero').textContent = data.total_consultas || 0;
-                } else {
-                    document.getElementById('contador-numero').textContent = '0';
-                }
-            } catch (error) {
-                console.error('Erro ao buscar contagem:', error);
-                document.getElementById('contador-numero').textContent = '✨';
-            }
-        }
-
-        function atualizarStatusContador(status) {
-            const statusDot = document.getElementById('contador-status');
-            if (!statusDot) return;
-            
-            if (status === 'online') {
-                statusDot.style.background = '#00ff88';
-                statusDot.style.boxShadow = '0 0 10px #00ff88';
-            } else {
-                statusDot.style.background = '#FFA726';
-                statusDot.style.boxShadow = '0 0 10px #FFA726';
-            }
-        }
-
-        function animarContador() {
-            const numero = document.getElementById('contador-numero');
-            if (!numero) return;
-            
-            numero.style.transform = 'scale(1.3)';
-            numero.style.color = '#FFD700';
-            
-            setTimeout(() => {
-                numero.style.transform = 'scale(1)';
-                numero.style.color = '#FFD700';
-            }, 300);
-        }
-
-        function usarContadorOffline() {
-            let local = localStorage.getItem('oraculo_12_local') || 0;
-            local = parseInt(local) + 1;
-            localStorage.setItem('oraculo_12_local', local);
-            
-            document.getElementById('contador-numero').textContent = local;
-            atualizarStatusContador('offline');
-            console.log('📱 Contador offline:', local);
-        }
-
         // ========== SISTEMA DE PERGUNTAS ==========
         async function carregarPerguntas() {
             try {
@@ -928,11 +955,9 @@
                     .limit(12);
                 
                 if (!error && perguntasDB && perguntasDB.length >= 12) {
-                    // Se tiver 12+ perguntas no banco, usar elas
                     perguntasQuiz = perguntasDB;
                     console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
                 } else {
-                    // Usar perguntas fixas como fallback
                     perguntasQuiz = gerar12PerguntasFixas();
                     console.log('📱 Usando 12 perguntas fixas');
                 }
@@ -1046,16 +1071,12 @@
 
         // ========== INTERFACE DO QUIZ ==========
         function iniciarQuiz() {
-            // Esconder header e mostrar quiz
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
             document.getElementById('quiz-section').style.display = 'block';
             document.getElementById('resultado-section').style.display = 'none';
             
-            // Embaralhar perguntas e pegar 12
             perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
-            
-            // Iniciar primeira pergunta
             perguntaAtual = 0;
             respostasUsuario = [];
             pontos = 0;
@@ -1136,11 +1157,9 @@
             const pergunta = perguntasQuiz[perguntaAtual];
             const container = document.getElementById('opcoes-container');
             
-            // Atualizar pergunta
             document.getElementById('pergunta-atual').textContent = pergunta.pergunta;
             document.getElementById('numero-pergunta').textContent = perguntaAtual + 1;
             
-            // Atualizar opções
             container.innerHTML = '';
             
             const opcoes = [
@@ -1152,22 +1171,16 @@
             opcoes.forEach(opcao => {
                 const button = document.createElement('button');
                 button.className = 'quiz-opcao glass-panel';
-                button.innerHTML = `
-                    <strong>${opcao.letra.toUpperCase()})</strong> ${opcao.texto}
-                `;
+                button.innerHTML = `<strong>${opcao.letra.toUpperCase()})</strong> ${opcao.texto}`;
                 button.onclick = () => selecionarResposta(opcao.letra, button);
                 container.appendChild(button);
             });
             
-            // Atualizar progresso
             document.getElementById('contador-perguntas').textContent = `${perguntaAtual + 1}/12`;
             document.getElementById('barra-progresso').style.width = `${((perguntaAtual + 1) / 12) * 100}%`;
             
-            // Esconder botão próximo
             document.getElementById('proxima-btn').style.display = 'none';
             document.getElementById('pular-btn').style.display = 'block';
-            
-            // Limpar feedback
             document.getElementById('feedback-container').innerHTML = '';
         }
 
@@ -1175,12 +1188,10 @@
             const pergunta = perguntasQuiz[perguntaAtual];
             const correta = letra === pergunta.resposta_correta;
             
-            // Desabilitar todas as opções
             document.querySelectorAll('.quiz-opcao').forEach(btn => {
                 btn.style.pointerEvents = 'none';
             });
             
-            // Marcar resposta
             if (correta) {
                 elemento.classList.add('correta');
                 pontos += 10;
@@ -1189,7 +1200,6 @@
                 elemento.classList.add('incorreta');
                 mostrarFeedback('❌ Resposta Incorreta', 'vermelho');
                 
-                // Mostrar resposta correta
                 const letraCorreta = pergunta.resposta_correta;
                 const opcoes = document.querySelectorAll('.quiz-opcao');
                 opcoes.forEach(opcao => {
@@ -1199,7 +1209,6 @@
                 });
             }
             
-            // Salvar resposta do usuário
             respostasUsuario.push({
                 pergunta: pergunta.pergunta,
                 resposta: letra,
@@ -1207,7 +1216,6 @@
                 explicacao: pergunta.explicacao
             });
             
-            // Mostrar botão próximo
             document.getElementById('proxima-btn').style.display = 'block';
             document.getElementById('pular-btn').style.display = 'none';
         }
@@ -1235,38 +1243,34 @@
         }
 
         function finalizarQuiz() {
-            // Calcular Pombagira baseado nos pontos
-            const maxPontos = 120; // 12 perguntas * 10 pontos cada
+            const maxPontos = 120;
             const porcentagem = (pontos / maxPontos) * 100;
             
-            // Determinar Pombagira baseado na pontuação
             let pombagiraIndex;
             
             if (porcentagem >= 90) {
-                pombagiraIndex = 0; // Maria Padilha - Mestre
+                pombagiraIndex = 0;
             } else if (porcentagem >= 80) {
-                pombagiraIndex = 2; // Maria Quitéria - Guerreira
+                pombagiraIndex = 2;
             } else if (porcentagem >= 70) {
-                pombagiraIndex = 6; // Cigana - Sábia
+                pombagiraIndex = 6;
             } else if (porcentagem >= 60) {
-                pombagiraIndex = 1; // Maria Mulambo - Curadora
+                pombagiraIndex = 1;
             } else if (porcentagem >= 50) {
-                pombagiraIndex = 4; // Dama da Noite - Mística
+                pombagiraIndex = 4;
             } else if (porcentagem >= 40) {
-                pombagiraIndex = 10; // Maria Farrapo - Transformadora
+                pombagiraIndex = 10;
             } else if (porcentagem >= 30) {
-                pombagiraIndex = 3; // Rosa Caveira - Justiceira
+                pombagiraIndex = 3;
             } else if (porcentagem >= 20) {
-                pombagiraIndex = 5; // Sete Saias - Alegre
+                pombagiraIndex = 5;
             } else if (porcentagem >= 10) {
-                pombagiraIndex = 8; // Da Praia - Emocional
+                pombagiraIndex = 8;
             } else {
-                pombagiraIndex = 11; // Da Figueira - Ancestral
+                pombagiraIndex = 11;
             }
             
             pombagiraResultado = pombagiras[pombagiraIndex];
-            
-            // Mostrar resultado
             mostrarResultado();
         }
 
@@ -1350,6 +1354,14 @@
             }
             return novoArray;
         }
+
+        // ========== INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✨ Oráculo das 12 Pombagiras iniciando...');
+            initContador();
+            carregarPerguntas();
+            exibirTodasPombagiras();
+        });
     </script>
 </body>
 </html>
