@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oráculo Glass das 12 Pombagiras 🔮</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cores Pombagira - Glassmorphism */
+            --roxo-profundo: #4a148c;
+            --roxo-vibrante: #7b1fa2;
+            --vermelho-sangue: #c62828;
+            --vermelho-fogo: #ff3d00;
+            --preto-veludo: #0a0a0a;
+            --preto-cetim: #1a1a1a;
+            --ouro: #ffd700;
+            --ouro-brilho: #fff176;
+            
+            /* Glassmorphism Effects */
+            --vidro-branco: rgba(255, 255, 255, 0.08);
+            --vidro-roxo: rgba(123, 31, 162, 0.15);
+            --vidro-vermelho: rgba(255, 61, 0, 0.12);
+            --vidro-ouro: rgba(255, 215, 0, 0.1);
+            --sombra-vidro: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --sombra-vidro-intensa: 0 12px 40px rgba(0, 0, 0, 0.4);
+            --borda-vidro: 1px solid rgba(255, 255, 255, 0.1);
+            --borda-vidro-dourada: 1px solid rgba(255, 215, 0, 0.3);
+            
+            /* Gradientes */
+            --gradiente-roxo: linear-gradient(135deg, var(--roxo-profundo), var(--roxo-vibrante));
+            --gradiente-fogo: linear-gradient(135deg, var(--vermelho-sangue), var(--vermelho-fogo));
+            --gradiente-ouro: linear-gradient(135deg, var(--ouro), var(--ouro-brilho));
+            
+            /* Efeitos de brilho */
+            --brilho-ouro: 0 0 20px rgba(255, 215, 0, 0.5);
+            --brilho-roxo: 0 0 20px rgba(123, 31, 162, 0.5);
+            --brilho-vermelho: 0 0 20px rgba(255, 61, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 30%, var(--roxo-profundo) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--vermelho-sangue) 0%, transparent 50%),
+                var(--preto-veludo);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeito de partículas no fundo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 61, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========== GLASSMORPHISM UTILITIES ========== */
+        .glass-panel {
+            background: var(--vidro-branco);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: var(--borda-vidro);
+            border-radius: 20px;
+            box-shadow: var(--sombra-vidro);
+        }
+
+        .glass-panel-roxo {
+            background: var(--vidro-roxo);
+            backdrop-filter: blur(12px);
+            border: var(--borda-vidro);
+            box-shadow: var(--sombra-vidro-intensa), var(--brilho-roxo);
+        }
+
+        .glass-panel-vermelho {
+            background: var(--vidro-vermelho);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 61, 0, 0.2);
+            box-shadow: var(--sombra-vidro-intensa), var(--brilho-vermelho);
+        }
+
+        .glass-panel-ouro {
+            background: var(--vidro-ouro);
+            backdrop-filter: blur(15px);
+            border: var(--borda-vidro-dourada);
+            box-shadow: var(--sombra-vidro-intensa), var(--brilho-ouro);
+        }
+
+        /* ========== CONTADOR GLASS ========== */
+        #contador-glass {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(74, 20, 140, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #contador-glass:hover {
+            background: rgba(123, 31, 162, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        #contador-glass .icone {
+            font-size: 16px;
+            animation: pulse 2s infinite;
+        }
+
+        #contador-glass .numero {
+            font-weight: 600;
+            color: var(--ouro);
+            font-size: 16px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        #contador-glass .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* ========== CONTAINER PRINCIPAL ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== HEADER GLASS ========== */
+        .header-glass {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 215, 0, 0.05) 50%,
+                transparent 70%
+            );
+            animation: shine 8s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .titulo-principal {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            background: var(--gradiente-ouro);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+
+        .subtitulo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        /* ========== SEÇÃO DE POMBAGIRAS ========== */
+        .secao-pombagiras {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .pombagira-card {
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pombagira-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pombagira-card:hover::before {
+            opacity: 1;
+        }
+
+        .pombagira-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(123, 31, 162, 0.3);
+        }
+
+        .pombagira-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pombagira-icone {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: var(--borda-vidro);
+        }
+
+        .pombagira-titulo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--ouro);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .pombagira-dominio {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .pombagira-descricao {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .pombagira-atributos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .atributo-tag {
+            padding: 5px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: var(--borda-vidro);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .pombagira-detalhes {
+            border-top: var(--borda-vidro);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .detalhe-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .detalhe-item i {
+            color: var(--ouro);
+            width: 20px;
+        }
+
+        /* ========== QUIZ SECTION ========== */
+        .quiz-container {
+            padding: 40px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .quiz-pergunta {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--ouro);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .quiz-opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .quiz-opcao {
+            padding: 18px 25px;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .quiz-opcao::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .quiz-opcao:hover::before {
+            left: 100%;
+        }
+
+        .quiz-opcao:hover {
+            transform: translateX(10px);
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(123, 31, 162, 0.2);
+        }
+
+        .quiz-opcao.correta {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .quiz-opcao.incorreta {
+            background: rgba(255, 61, 0, 0.15);
+            border-color: rgba(255, 61, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 61, 0, 0.3);
+        }
+
+        .quiz-botoes {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .botao-glass {
+            padding: 15px 35px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .botao-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .botao-glass:hover::before {
+            left: 100%;
+        }
+
+        .botao-principal {
+            background: var(--gradiente-fogo);
+            color: white;
+            border: 1px solid rgba(255, 61, 0, 0.3);
+        }
+
+        .botao-principal:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 25px rgba(255, 61, 0, 0.3),
+                0 0 30px rgba(255, 61, 0, 0.2);
+        }
+
+        .botao-secundario {
+            background: var(--vidro-branco);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: var(--borda-vidro);
+        }
+
+        .botao-secundario:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--sombra-vidro-intensa);
+        }
+
+        /* ========== RESULTADO SECTION ========== */
+        .resultado-container {
+            padding: 50px;
+            text-align: center;
+            display: none;
+        }
+
+        .resultado-titulo {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--ouro);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .pombagira-resultado {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 30px;
+        }
+
+        .pombagira-imagem {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            border: 3px solid var(--ouro);
+            box-shadow: 
+                0 0 40px rgba(255, 215, 0, 0.5),
+                inset 0 0 40px rgba(0, 0, 0, 0.5);
+            background: var(--gradiente-roxo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .mensagem-audio {
+            font-style: italic;
+            line-height: 1.6;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 3px solid var(--ouro);
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .titulo-principal {
+                font-size: 2.5rem;
+            }
+            
+            .secao-pombagiras {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-container,
+            .resultado-container {
+                padding: 20px;
+            }
+            
+            #contador-glass {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animar-entrada {
+            animation: aparecer 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contador Glass -->
+    <div id="contador-glass" title="Consultas ao Oráculo">
+        <span class="icone">🔮</span>
+        <span class="texto">Consultas:</span>
+        <span class="numero" id="contador-numero">0</span>
+        <span class="status" id="contador-status"></span>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header-glass glass-panel-roxo animar-entrada">
+            <h1 class="titulo-principal">Oráculo das 12 Pombagiras</h1>
+            <p class="subtitulo">13 Perguntas para Revelar sua Guia Espiritual</p>
+            
+            <div class="quiz-botoes" style="margin-top: 30px;">
+                <button class="botao-glass botao-principal" onclick="iniciarQuiz()">
+                    🔮 Iniciar Consulta (13 Perguntas)
+                </button>
+                <button class="botao-glass botao-secundario" onclick="mostrarTodasPombagiras()">
+                    👑 Conhecer Todas as 12 Pombagiras
+                </button>
+            </div>
+        </header>
+
+        <!-- Seção de Todas as Pombagiras (Inicialmente oculta) -->
+        <div id="secao-todas-pombagiras" class="secao-pombagiras" style="display: none;">
+            <!-- As 12 Pombagiras serão inseridas aqui via JavaScript -->
+        </div>
+
+        <!-- Seção do Quiz -->
+        <div id="quiz-section" class="quiz-container glass-panel-roxo animar-entrada" style="display: none;">
+            <div class="quiz-pergunta" id="pergunta-atual">
+                Carregando pergunta...
+            </div>
+            
+            <div class="quiz-opcoes" id="opcoes-container">
+                <!-- Opções serão inseridas aqui -->
+            </div>
+            
+            <div class="quiz-botoes">
+                <button class="botao-glass botao-secundario" onclick="pularPergunta()" id="pular-btn">
+                    ⏭️ Pular Pergunta
+                </button>
+                <button class="botao-glass botao-principal" onclick="proximaPergunta()" id="proxima-btn" style="display: none;">
+                    ▶️ Próxima
+                </button>
+            </div>
+            
+            <div id="feedback-container" style="margin-top: 20px;"></div>
+            
+            <div id="progresso-container" style="margin-top: 30px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Progresso: Pergunta <span id="numero-pergunta">1</span> de 13</span>
+                    <span id="contador-perguntas">1/13</span>
+                </div>
+                <div style="height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden;">
+                    <div id="barra-progresso" style="height: 100%; width: 0%; background: var(--gradiente-fogo); transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Resultado -->
+        <div id="resultado-section" class="resultado-container glass-panel-ouro animar-entrada" style="display: none;">
+            <h2 class="resultado-titulo">Sua Pombagira Guia é:</h2>
+            
+            <div id="pombagira-resultado" class="pombagira-resultado glass-panel-roxo">
+                <!-- Resultado será inserido aqui -->
+            </div>
+            
+            <div class="quiz-botoes">
+                <button class="botao-glass botao-principal" onclick="compartilharResultado()">
+                    📱 Compartilhar Resultado
+                </button>
+                <button class="botao-glass botao-secundario" onclick="novaConsulta()">
+                    🔄 Nova Consulta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ========== CONFIGURAÇÃO SUPABASE ==========
+        const SUPABASE_URL = 'https://qgnprifuachmfxoaalax.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnbnByaWZ1YWNobWZ4b2FhbGF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzODU5MDcsImV4cCI6MjA4MDk2MTkwN30.sKSYFhcI-zflr9RUKXpWF0_5sc6foDG7yxdEirtE0W4';
+        
+        // Nome da tabela para o novo oráculo
+        const ORACULO_NOME = 'oraculo_12_pombagiras';
+
+        // ========== DADOS DAS 12 POMBAGIRAS ==========
+        const pombagiras = [
+            {
+                id: 1,
+                nome: "Maria Padilha",
+                dominio: "Comando/Realeza",
+                descricao: "Maria Padilha é uma das Pombagiras mais conhecidas e reverenciadas na Umbanda e Quimbanda. Ela é associada ao poder, liderança e autoridade, sendo considerada a 'Rainha das Pombagiras'.",
+                icone: "👑",
+                cores: ["#c62828", "#ffd700"],
+                atributos: ["Poder", "Liderança", "Justiça", "Proteção"],
+                oferendas: "Velas vermelhas, vinho tinto, rosas vermelhas, perfumes e joias",
+                dias: "Segunda-feira",
+                elemento: "Fogo",
+                mensagemAudio: "Maria Padilha é a rainha que governa com sabedoria e força. Ela ensina a liderar com justiça e a enfrentar desafios com coragem. Seu manto de realeza nos lembra que o poder verdadeiro vem da sabedoria e do respeito."
+            },
+            {
+                id: 2,
+                nome: "Maria Mulambo",
+                dominio: "Cura/Humildade",
+                descricao: "Maria Mulambo é a Pombagira da cura espiritual e física, associada à humildade e à transformação. Seu nome 'Mulambo' simboliza a simplicidade e a capacidade de curar feridas emocionais e espirituais.",
+                icone: "🌿",
+                cores: ["#ffffff", "#4CAF50"],
+                atributos: ["Cura", "Humildade", "Transformação", "Renovação"],
+                oferendas: "Ervas medicinais, velas brancas, água de cheiro e frutas",
+                dias: "Quinta-feira",
+                elemento: "Terra",
+                mensagemAudio: "Maria Mulambo é a mãe que acolhe e cura. Ela ensina que a humildade é o caminho para a verdadeira transformação. Com suas ervas e seu manto de simplicidade, ela renova nossas forças e purifica nossas almas."
+            },
+            {
+                id: 3,
+                nome: "Maria Quitéria",
+                dominio: "Guerra/Proteção",
+                descricao: "Maria Quitéria é a guerreira das Pombagiras, associada à coragem, proteção e luta. Seu nome faz referência à heroína brasileira que lutou na Independência do Brasil.",
+                icone: "⚔️",
+                cores: ["#c62828", "#000000"],
+                atributos: ["Coragem", "Proteção", "Justiça", "Combate"],
+                oferendas: "Velas vermelhas, espadas simbólicas, vinho e pimenta",
+                dias: "Terça-feira",
+                elemento: "Fogo",
+                mensagemAudio: "Maria Quitéria é a guerreira que defende os seus com bravery. Ela empunha a espada da justiça e nos ensina a lutar por nossos direitos. Com ela, aprendemos que a proteção vem da coragem e da fé."
+            },
+            {
+                id: 4,
+                nome: "Rosa Caveira",
+                dominio: "Justiça/Morte",
+                descricao: "Rosa Caveira é a Pombagira associada à justiça divina e ao ciclo da vida e da morte. A caveira simboliza transformação e renascimento.",
+                icone: "💀",
+                cores: ["#000000", "#c62828"],
+                atributos: ["Justiça", "Transformação", "Renascimento", "Equilíbrio"],
+                oferendas: "Velas pretas, rosas vermelhas, vinho e mel",
+                dias: "Segunda-feira",
+                elemento: "Terra",
+                mensagemAudio: "Rosa Caveira é a guardiã da justiça e do equilíbrio. Ela nos lembra que a morte é apenas uma passagem, e que a justiça divina sempre prevalece. Com sua presença, aprendemos a respeitar os ciclos da vida."
+            },
+            {
+                id: 5,
+                nome: "Dama da Noite",
+                dominio: "Mistério/Oculto",
+                descricao: "Dama da Noite é a Pombagira do mistério, da intuição e dos segredos. Ela atua nas sombras, revelando verdades ocultas e protegendo os mistérios sagrados.",
+                icone: "🌙",
+                cores: ["#4a148c", "#000000"],
+                atributos: ["Mistério", "Intuição", "Sabedoria", "Proteção"],
+                oferendas: "Velas roxas, cristais, incenso e flores noturnas",
+                dias: "Sexta-feira",
+                elemento: "Ar",
+                mensagemAudio: "Dama da Noite é a guardiã dos segredos e da sabedoria oculta. Ela ilumina nosso caminho com a luz da lua e nos ensina a confiar em nossa intuição. Com ela, descobrimos que o mistério é a porta para o conhecimento."
+            },
+            {
+                id: 6,
+                nome: "Sete Saias",
+                dominio: "Alegria/Intensidade",
+                descricao: "Sete Saias é a Pombagira da alegria, da dança e da intensidade da vida. Suas sete saias coloridas simbolizam a diversidade e a vibração da energia feminina.",
+                icone: "💃",
+                cores: ["#FF4081", "#FFEB3B", "#2196F3"],
+                atributos: ["Alegria", "Dança", "Sensualidade", "Prosperidade"],
+                oferendas: "Velas coloridas, doces, frutas, música e dança",
+                dias: "Sábado",
+                elemento: "Fogo",
+                mensagemAudio: "Sete Saias é a dançarina que traz a alegria e a cor para nossa vida. Com suas saias coloridas, ela nos ensina a celebrar cada momento e a viver com intensidade. Com ela, a vida se torna uma festa!"
+            },
+            {
+                id: 7,
+                nome: "Cigana",
+                dominio: "Liberdade/Prosperidade",
+                descricao: "Pombagira Cigana é associada à liberdade, aos caminhos abertos e à prosperidade. Ela representa o espírito nômade e a sabedoria dos povos ciganos.",
+                icone: "🔮",
+                cores: ["#FFD700", "#7B1FA2"],
+                atributos: ["Liberdade", "Prosperidade", "Viagens", "Sabedoria"],
+                oferendas: "Moedas, velas douradas, baralho cigano, perfumes",
+                dias: "Quarta-feira",
+                elemento: "Ar",
+                mensagemAudio: "Pombagira Cigana é a viajante que abre caminhos e traz prosperidade. Com seu lenço colorido e seu baralho, ela nos ensina a confiar no destino e a viver com liberdade. Com ela, a sorte está sempre ao nosso lado."
+            },
+            {
+                id: 8,
+                nome: "Maria Navalha",
+                dominio: "Malandragem/Rua",
+                descricao: "Maria Navalha é a Pombagira da malandragem, da rua e da sobrevivência. A navalha simboliza defesa e astúcia.",
+                icone: "🔪",
+                cores: ["#c62828", "#333333"],
+                atributos: ["Astúcia", "Proteção", "Sobrevivência", "Coragem"],
+                oferendas: "Velas vermelhas, cachaça, cigarros e moedas",
+                dias: "Terça-feira",
+                elemento: "Metal",
+                mensagemAudio: "Maria Navalha é a protetora das ruas e dos que lutam para sobreviver. Com sua navalha e sua malandragem, ela nos ensina a ser espertos e a enfrentar os desafios da vida com coragem. Com ela, nunca estamos sozinhos."
+            },
+            {
+                id: 9,
+                nome: "Da Praia",
+                dominio: "Emoção/Limpeza",
+                descricao: "Pombagira da Praia é associada às emoções, à limpeza espiritual e ao poder purificador da água. Ela representa a conexão com o mar.",
+                icone: "🌊",
+                cores: ["#2196F3", "#FFFFFF"],
+                atributos: ["Emoções", "Limpeza", "Renovação", "Paz"],
+                oferendas: "Água do mar, conchas, velas azuis, flores brancas",
+                dias: "Sexta-feira",
+                elemento: "Água",
+                mensagemAudio: "Pombagira da Praia é a guardiã das águas e das emoções. Com suas ondas, ela limpa nossa alma e nos ensina a fluir com a vida. Com ela, encontramos paz e renovação."
+            },
+            {
+                id: 10,
+                nome: "Maria Farrapo",
+                dominio: "Sanidade/Caos",
+                descricao: "Maria Farrapo é a Pombagira que atua na fronteira entre a sanidade e o caos mental. Ela ajuda a trazer equilíbrio para mentes perturbadas.",
+                icone: "🧩",
+                cores: ["#000000", "#FFFFFF"],
+                atributos: ["Transformação", "Equilíbrio", "Cura Mental", "Renovação"],
+                oferendas: "Velas pretas e brancas, ervas calmantes, cristais",
+                dias: "Segunda-feira",
+                elemento: "Ar",
+                mensagemAudio: "Maria Farrapo é a transformadora da mente. Com seus farrapos, ela nos ensina que até no caos podemos encontrar a sanidade. Com ela, aprendemos a transformar nossas dores em força."
+            },
+            {
+                id: 11,
+                nome: "Menina",
+                dominio: "Renovação/Inocência",
+                descricao: "Pombagira Menina representa a energia da renovação, da inocência e do recomeço. Ela é associada à pureza e à capacidade de renascer.",
+                icone: "👧",
+                cores: ["#FFB6C1", "#FFFFFF"],
+                atributos: ["Renovação", "Inocência", "Pureza", "Esperança"],
+                oferendas: "Bonecas, doces, velas cor-de-rosa, flores brancas",
+                dias: "Domingo",
+                elemento: "Ar",
+                mensagemAudio: "Pombagira Menina é a guardiã da inocência e da renovação. Com seu sorriso doce, ela nos ensina que sempre podemos recomeçar. Com ela, encontramos a pureza e a esperança."
+            },
+            {
+                id: 12,
+                nome: "Da Figueira",
+                dominio: "Raiz/Ancestralidade",
+                descricao: "Pombagira da Figueira é a conexão com a ancestralidade, a terra e as raízes. Ela representa a sabedoria dos antepassados e a força da natureza.",
+                icone: "🌳",
+                cores: ["#8BC34A", "#5D4037"],
+                atributos: ["Ancestralidade", "Conexão", "Sabedoria", "Proteção"],
+                oferendas: "Folhas de figueira, velas verdes, sementes, frutas",
+                dias: "Quinta-feira",
+                elemento: "Terra",
+                mensagemAudio: "Pombagira da Figueira é a guardiã das raízes e da ancestralidade. Com seus galhos fortes, ela nos conecta aos nossos antepassados e à sabedoria da terra. Com ela, encontramos força e pertencimento."
+            }
+        ];
+
+        // ========== VARIÁVEIS DO QUIZ ==========
+        let perguntasQuiz = [];
+        let perguntaAtual = 0;
+        let respostasUsuario = [];
+        let pontos = 0;
+        let pombagiraResultado = null;
+
+        // ========== INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('✨ Oráculo das 12 Pombagiras iniciando...');
+            
+            // Iniciar contador
+            await initContador();
+            
+            // Carregar todas as perguntas do Supabase
+            await carregarPerguntas();
+            
+            // Exibir todas as Pombagiras inicialmente
+            exibirTodasPombagiras();
+        });
+
+        // ========== CONTADOR SUPABASE ==========
+        async function initContador() {
+            try {
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                
+                // Criar tabela se não existir
+                await criarTabelaContador(supabase);
+                
+                // Verificar se já visitou nesta sessão
+                if (!sessionStorage.getItem('oraculo_12_visitado')) {
+                    await incrementarContador(supabase);
+                    sessionStorage.setItem('oraculo_12_visitado', 'true');
+                    atualizarStatusContador('online');
+                } else {
+                    await mostrarContagemAtual(supabase);
+                    atualizarStatusContador('online');
+                }
+                
+            } catch (error) {
+                console.warn('⚠️ Modo offline:', error.message);
+                usarContadorOffline();
+            }
+        }
+
+        async function criarTabelaContador(supabase) {
+            // Esta função será executada no Supabase SQL Editor
+            // Não precisa ser chamada aqui no frontend
+        }
+
+        async function incrementarContador(supabase) {
+            try {
+                // Primeiro tentar UPSERT (atualizar ou criar)
+                const { data: registroAtual, error: erroBusca } = await supabase
+                    .from('oraculo_pombagira')
+                    .select('total_consultas')
+                    .eq('nome', ORACULO_NOME)
+                    .single();
+                
+                let novaContagem;
+                
+                if (erroBusca || !registroAtual) {
+                    // Criar novo registro
+                    novaContagem = 1;
+                    const { error: erroCriar } = await supabase
+                        .from('oraculo_pombagira')
+                        .insert([{
+                            nome: ORACULO_NOME,
+                            descricao: 'Oráculo das 12 Pombagiras - Glassmorphism',
+                            total_consultas: novaContagem
+                        }]);
+                    
+                    if (erroCriar) throw erroCriar;
+                    
+                } else {
+                    // Atualizar existente
+                    novaContagem = (registroAtual.total_consultas || 0) + 1;
+                    const { error: erroAtualizar } = await supabase
+                        .from('oraculo_pombagira')
+                        .update({ 
+                            total_consultas: novaContagem,
+                            atualizado_em: new Date().toISOString()
+                        })
+                        .eq('nome', ORACULO_NOME);
+                    
+                    if (erroAtualizar) throw erroAtualizar;
+                }
+                
+                // Atualizar display
+                document.getElementById('contador-numero').textContent = novaContagem;
+                animarContador();
+                console.log(`✅ Contador: ${novaContagem} consultas`);
+                
+            } catch (error) {
+                console.error('❌ Erro no contador:', error);
+                throw error;
+            }
+        }
+
+        async function mostrarContagemAtual(supabase) {
+            try {
+                const { data } = await supabase
+                    .from('oraculo_pombagira')
+                    .select('total_consultas')
+                    .eq('nome', ORACULO_NOME)
+                    .single();
+                
+                if (data) {
+                    document.getElementById('contador-numero').textContent = data.total_consultas || 0;
+                } else {
+                    document.getElementById('contador-numero').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Erro ao buscar contagem:', error);
+                document.getElementById('contador-numero').textContent = '✨';
+            }
+        }
+
+        function atualizarStatusContador(status) {
+            const statusDot = document.getElementById('contador-status');
+            if (!statusDot) return;
+            
+            if (status === 'online') {
+                statusDot.style.background = '#00ff88';
+                statusDot.style.boxShadow = '0 0 10px #00ff88';
+            } else {
+                statusDot.style.background = '#FFA726';
+                statusDot.style.boxShadow = '0 0 10px #FFA726';
+            }
+        }
+
+        function animarContador() {
+            const numero = document.getElementById('contador-numero');
+            if (!numero) return;
+            
+            numero.style.transform = 'scale(1.3)';
+            numero.style.color = '#FFD700';
+            
+            setTimeout(() => {
+                numero.style.transform = 'scale(1)';
+                numero.style.color = '#FFD700';
+            }, 300);
+        }
+
+        function usarContadorOffline() {
+            let local = localStorage.getItem('oraculo_12_local') || 0;
+            local = parseInt(local) + 1;
+            localStorage.setItem('oraculo_12_local', local);
+            
+            document.getElementById('contador-numero').textContent = local;
+            atualizarStatusContador('offline');
+            console.log('📱 Contador offline:', local);
+        }
+
+        // ========== SISTEMA DE PERGUNTAS ==========
+        async function carregarPerguntas() {
+            try {
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                
+                // Tentar carregar do Supabase
+                const { data: perguntasDB, error } = await supabase
+                    .from('perguntas_pombagira')
+                    .select('*')
+                    .eq('ativa', true)
+                    .order('nivel_dificuldade');
+                
+                if (!error && perguntasDB && perguntasDB.length >= 13) {
+                    // Se tiver 13+ perguntas no banco, usar elas
+                    perguntasQuiz = perguntasDB;
+                    console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
+                } else {
+                    // Usar perguntas fixas como fallback (agora com 13 perguntas!)
+                    perguntasQuiz = gerar13PerguntasFixas();
+                    console.log('📱 Usando 13 perguntas fixas');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar perguntas:', error);
+                perguntasQuiz = gerar13PerguntasFixas();
+            }
+        }
+
+        function gerar13PerguntasFixas() {
+            return [
+                {
+                    pergunta: "Qual saudação abre os caminhos na gira?",
+                    opcao_a: "Saravá",
+                    opcao_b: "Laroyê Exu",
+                    opcao_c: "Axé",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 1,
+                    tema: "saudações",
+                    explicacao: "Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar."
+                },
+                {
+                    pergunta: "Maria Padilha atua principalmente em qual encruzilhada?",
+                    opcao_a: "De terra",
+                    opcao_b: "De vento",
+                    opcao_c: "De fogo",
+                    resposta_correta: "a",
+                    nivel_dificuldade: 2,
+                    tema: "entidades",
+                    explicacao: "Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material."
+                },
+                {
+                    pergunta: "Qual elemento representa Maria Mulambo?",
+                    opcao_a: "Fogo",
+                    opcao_b: "Terra",
+                    opcao_c: "Água",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 2,
+                    tema: "elementos",
+                    explicacao: "Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade."
+                },
+                {
+                    pergunta: "Qual dia da semana é mais forte para Pombagira Cigana?",
+                    opcao_a: "Segunda-feira",
+                    opcao_b: "Quarta-feira",
+                    opcao_c: "Sexta-feira",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 3,
+                    tema: "dias",
+                    explicacao: "Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana."
+                },
+                {
+                    pergunta: "O que simboliza a navalha de Maria Navalha?",
+                    opcao_a: "Beleza",
+                    opcao_b: "Defesa e astúcia",
+                    opcao_c: "Riqueza",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 2,
+                    tema: "símbolos",
+                    explicacao: "A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver."
+                },
+                {
+                    pergunta: "Qual Pombagira está ligada às águas e emoções?",
+                    opcao_a: "Maria Padilha",
+                    opcao_b: "Pombagira da Praia",
+                    opcao_c: "Rosa Caveira",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 1,
+                    tema: "elementos",
+                    explicacao: "Pombagira da Praia trabalha com as águas e a purificação emocional."
+                },
+                {
+                    pergunta: "Qual Pombagira é conhecida como 'Rainha das Encruzilhadas'?",
+                    opcao_a: "Maria Mulambo",
+                    opcao_b: "Maria Padilha",
+                    opcao_c: "Pombagira Cigana",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 1,
+                    tema: "títulos",
+                    explicacao: "Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos."
+                },
+                {
+                    pergunta: "Qual cor está mais associada a Rosa Caveira?",
+                    opcao_a: "Azul",
+                    opcao_b: "Preto e Vermelho",
+                    opcao_c: "Verde",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 2,
+                    tema: "cores",
+                    explicacao: "Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação)."
+                },
+                {
+                    pergunta: "Sete Saias representa qual energia principal?",
+                    opcao_a: "Tristeza",
+                    opcao_b: "Alegria e dança",
+                    opcao_c: "Sério",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 1,
+                    tema: "energias",
+                    explicacao: "Sete Saias traz a energia da alegria, dança e celebração da vida."
+                },
+                {
+                    pergunta: "Pombagira da Figueira conecta com o quê?",
+                    opcao_a: "Futuro",
+                    opcao_b: "Ancestralidade",
+                    opcao_c: "Viagens",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 3,
+                    tema: "conexões",
+                    explicacao: "Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares."
+                },
+                {
+                    pergunta: "Qual oferenda é tradicional para Maria Navalha?",
+                    opcao_a: "Champagne",
+                    opcao_b: "Cachaça",
+                    opcao_c: "Vinho",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 2,
+                    tema: "oferendas",
+                    explicacao: "Maria Navalha aceita cachaça como oferenda, representando a força do povo."
+                },
+                {
+                    pergunta: "Dama da Noite atua principalmente em qual período?",
+                    opcao_a: "Manhã",
+                    opcao_b: "Noite",
+                    opcao_c: "Tarde",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 1,
+                    tema: "tempo",
+                    explicacao: "Dama da Noite trabalha com os mistérios e segredos que surgem à noite."
+                },
+                {
+                    pergunta: "Qual elemento rege Pombagira Menina?",
+                    opcao_a: "Terra",
+                    opcao_b: "Ar",
+                    opcao_c: "Fogo",
+                    resposta_correta: "b",
+                    nivel_dificuldade: 3,
+                    tema: "elementos",
+                    explicacao: "Pombagira Menina está ligada ao elemento Ar, que representa renovação e novos começos."
+                }
+            ];
+        }
+
+        // ========== INTERFACE DO QUIZ ==========
+        function iniciarQuiz() {
+            // Esconder header e mostrar quiz
+            document.querySelector('.header-glass').style.display = 'none';
+            document.getElementById('secao-todas-pombagiras').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('resultado-section').style.display = 'none';
+            
+            // Embaralhar perguntas e pegar 13
+            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 13); // 13 PERGUNTAS!
+            
+            // Iniciar primeira pergunta
+            perguntaAtual = 0;
+            respostasUsuario = [];
+            pontos = 0;
+            
+            mostrarPergunta();
+        }
+
+        function mostrarTodasPombagiras() {
+            document.querySelector('.header-glass').style.display = 'none';
+            document.getElementById('secao-todas-pombagiras').style.display = 'grid';
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('resultado-section').style.display = 'none';
+        }
+
+        function exibirTodasPombagiras() {
+            const container = document.getElementById('secao-todas-pombagiras');
+            container.innerHTML = '';
+            
+            pombagiras.forEach(pombagira => {
+                const card = document.createElement('div');
+                card.className = 'pombagira-card glass-panel';
+                card.style.borderLeft = `4px solid ${pombagira.cores[0]}`;
+                
+                card.innerHTML = `
+                    <div class="pombagira-header">
+                        <div class="pombagira-icone">${pombagira.icone}</div>
+                        <div>
+                            <h3 class="pombagira-titulo">${pombagira.nome}</h3>
+                            <span class="pombagira-dominio">${pombagira.dominio}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="pombagira-descricao">${pombagira.descricao}</p>
+                    
+                    <div class="pombagira-atributos">
+                        ${pombagira.atributos.map(atributo => 
+                            `<span class="atributo-tag">${atributo}</span>`
+                        ).join('')}
+                    </div>
+                    
+                    <div class="pombagira-detalhes">
+                        <div class="detalhe-item">
+                            <i>🎨</i>
+                            <span>Cores: ${pombagira.cores.join(', ')}</span>
+                        </div>
+                        <div class="detalhe-item">
+                            <i>📅</i>
+                            <span>Dia forte: ${pombagira.dias}</span>
+                        </div>
+                        <div class="detalhe-item">
+                            <i>🌿</i>
+                            <span>Elemento: ${pombagira.elemento}</span>
+                        </div>
+                        <div class="detalhe-item">
+                            <i>🎁</i>
+                            <span>Oferendas: ${pombagira.oferendas}</span>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function mostrarPergunta() {
+            if (perguntaAtual >= 13) { // AGORA É 13!
+                finalizarQuiz();
+                return;
+            }
+            
+            const pergunta = perguntasQuiz[perguntaAtual];
+            const container = document.getElementById('opcoes-container');
+            
+            // Atualizar pergunta
+            document.getElementById('pergunta-atual').textContent = pergunta.pergunta;
+            document.getElementById('numero-pergunta').textContent = perguntaAtual + 1;
+            
+            // Atualizar opções
+            container.innerHTML = '';
+            
+            const opcoes = [
+                { letra: 'a', texto: pergunta.opcao_a },
+                { letra: 'b', texto: pergunta.opcao_b },
+                { letra: 'c', texto: pergunta.opcao_c }
+            ];
+            
+            opcoes.forEach(opcao => {
+                const button = document.createElement('button');
+                button.className = 'quiz-opcao glass-panel';
+                button.innerHTML = `
+                    <strong>${opcao.letra.toUpperCase()})</strong> ${opcao.texto}
+                `;
+                button.onclick = () => selecionarResposta(opcao.letra, button);
+                container.appendChild(button);
+            });
+            
+            // Atualizar progresso
+            document.getElementById('contador-perguntas').textContent = 
+                `${perguntaAtual + 1}/13`; // FIXO EM 13!
+            
+            document.getElementById('barra-progresso').style.width = 
+                `${((perguntaAtual + 1) / 13) * 100}%`; // FIXO EM 13!
+            
+            // Esconder botão próximo
+            document.getElementById('proxima-btn').style.display = 'none';
+            document.getElementById('pular-btn').style.display = 'block';
+            
+            // Limpar feedback
+            document.getElementById('feedback-container').innerHTML = '';
+        }
+
+        function selecionarResposta(letra, elemento) {
+            const pergunta = perguntasQuiz[perguntaAtual];
+            const correta = letra === pergunta.resposta_correta;
+            
+            // Desabilitar todas as opções
+            document.querySelectorAll('.quiz-opcao').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+            });
+            
+            // Marcar resposta
+            if (correta) {
+                elemento.classList.add('correta');
+                pontos += pergunta.nivel_dificuldade * 10;
+                mostrarFeedback('✅ Resposta Correta!', 'verde');
+            } else {
+                elemento.classList.add('incorreta');
+                mostrarFeedback('❌ Resposta Incorreta', 'vermelho');
+                
+                // Mostrar resposta correta
+                const letraCorreta = pergunta.resposta_correta;
+                const opcoes = document.querySelectorAll('.quiz-opcao');
+                opcoes.forEach(opcao => {
+                    if (opcao.textContent.trim().startsWith(letraCorreta.toUpperCase() + ')')) {
+                        opcao.classList.add('correta');
+                    }
+                });
+            }
+            
+            // Salvar resposta do usuário
+            respostasUsuario.push({
+                pergunta: pergunta.pergunta,
+                resposta: letra,
+                correta: correta,
+                explicacao: pergunta.explicacao
+            });
+            
+            // Mostrar botão próximo
+            document.getElementById('proxima-btn').style.display = 'block';
+            document.getElementById('pular-btn').style.display = 'none';
+        }
+
+        function mostrarFeedback(mensagem, tipo) {
+            const container = document.getElementById('feedback-container');
+            container.innerHTML = `
+                <div class="glass-panel" style="padding: 15px; border-color: ${tipo === 'verde' ? '#00ff88' : '#ff3d00'};">
+                    <strong>${mensagem}</strong>
+                    <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                        ${perguntasQuiz[perguntaAtual].explicacao}
+                    </p>
+                </div>
+            `;
+        }
+
+        function pularPergunta() {
+            perguntaAtual++;
+            mostrarPergunta();
+        }
+
+        function proximaPergunta() {
+            perguntaAtual++;
+            mostrarPergunta();
+        }
+
+        function finalizarQuiz() {
+            // Calcular Pombagira baseado nos pontos
+            const maxPontos = 13 * 30; // 13 perguntas * máximo 30 pontos cada
+            const porcentagem = (pontos / maxPontos) * 100;
+            
+            // Determinar Pombagira baseado na pontuação (agora mais preciso com 13 perguntas)
+            let pombagiraIndex;
+            
+            if (porcentagem >= 90) {
+                pombagiraIndex = 0; // Maria Padilha - Mestre
+            } else if (porcentagem >= 80) {
+                pombagiraIndex = 2; // Maria Quitéria - Guerreira
+            } else if (porcentagem >= 70) {
+                pombagiraIndex = 6; // Cigana - Sábia
+            } else if (porcentagem >= 60) {
+                pombagiraIndex = 1; // Maria Mulambo - Curadora
+            } else if (porcentagem >= 50) {
+                pombagiraIndex = 4; // Dama da Noite - Mística
+            } else if (porcentagem >= 40) {
+                pombagiraIndex = 10; // Maria Farrapo - Transformadora
+            } else if (porcentagem >= 30) {
+                pombagiraIndex = 3; // Rosa Caveira - Justiceira
+            } else if (porcentagem >= 20) {
+                pombagiraIndex = 5; // Sete Saias - Alegre
+            } else if (porcentagem >= 10) {
+                pombagiraIndex = 8; // Da Praia - Emocional
+            } else {
+                pombagiraIndex = 11; // Da Figueira - Ancestral
+            }
+            
+            pombagiraResultado = pombagiras[pombagiraIndex];
+            
+            // Mostrar resultado
+            mostrarResultado();
+        }
+
+        function mostrarResultado() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('resultado-section').style.display = 'block';
+            
+            const container = document.getElementById('pombagira-resultado');
+            
+            container.innerHTML = `
+                <div style="text-align: center;">
+                    <div class="pombagira-imagem" style="background: linear-gradient(135deg, ${pombagiraResultado.cores[0]}, ${pombagiraResultado.cores[1] || pombagiraResultado.cores[0]});">
+                        ${pombagiraResultado.icone}
+                    </div>
+                    
+                    <h3 style="font-size: 2rem; color: #FFD700; margin-bottom: 10px;">
+                        ${pombagiraResultado.nome}
+                    </h3>
+                    
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">
+                        ${pombagiraResultado.dominio}
+                    </p>
+                    
+                    <div style="margin: 25px 0;">
+                        <p style="line-height: 1.6; margin-bottom: 20px;">
+                            ${pombagiraResultado.descricao}
+                        </p>
+                        
+                        <div class="mensagem-audio">
+                            <strong>🗣️ Mensagem da ${pombagiraResultado.nome}:</strong>
+                            <p style="margin-top: 10px;">"${pombagiraResultado.mensagemAudio}"</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 25px 0;">
+                        <div class="glass-panel" style="padding: 10px 20px;">
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Pontuação Final</div>
+                            <div style="font-weight: bold;">${pontos} pontos</div>
+                        </div>
+                        
+                        <div class="glass-panel" style="padding: 10px 20px;">
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Dia Forte</div>
+                            <div style="font-weight: bold;">${pombagiraResultado.dias}</div>
+                        </div>
+                        
+                        <div class="glass-panel" style="padding: 10px 20px;">
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Elemento</div>
+                            <div style="font-weight: bold;">${pombagiraResultado.elemento}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4 style="margin-bottom: 15px; color: #FFD700;">Oferendas Recomendadas:</h4>
+                        <p style="opacity: 0.9;">${pombagiraResultado.oferendas}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Registrar resultado no Supabase (opcional)
+            registrarResultadoConsulta();
+        }
+
+        async function registrarResultadoConsulta() {
+            try {
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                
+                const { error } = await supabase
+                    .from('resultados_oraculo')
+                    .insert([{
+                        session_id: sessionStorage.getItem('session_id') || 'anonimo',
+                        score: pontos,
+                        pombagira_id: pombagiraResultado.id,
+                        respostas: respostasUsuario
+                    }]);
+                
+                if (!error) {
+                    console.log('✅ Resultado registrado no Supabase');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao registrar resultado:', error);
+            }
+        }
+
+        function compartilharResultado() {
+            const texto = `🔮 ORÁCULO DAS 12 POMBAGIRAS 🔮\n\nApós 13 perguntas sagradas, descobri minha Pombagira Guia!\n\n🏆 Minha guia é: ${pombagiraResultado.nome}\n📜 Domínio: ${pombagiraResultado.dominio}\n⭐ Pontuação: ${pontos} pontos\n\n"${pombagiraResultado.mensagemAudio}"\n\nFaça sua consulta espiritual também!`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Minha Pombagira Guia - Oráculo das 12 Pombagiras',
+                    text: texto,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(texto + '\n\n' + window.location.href);
+                alert('Resultado copiado para a área de transferência! 📋');
+            }
+        }
+
+        function novaConsulta() {
+            location.reload();
+        }
+
+        // ========== UTILIDADES ==========
+        function embaralharArray(array) {
+            const novoArray = [...array];
+            for (let i = novoArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [novoArray[i], novoArray[j]] = [novoArray[j], novoArray[i]];
+            }
+            return novoArray;
+        }
+
+        // ========== SQL PARA 13+ PERGUNTAS ==========
+        window.criarTabela13Perguntas = function() {
+            const sql = `
+            -- Criar tabela de perguntas para o oráculo das 12 Pombagiras
+            CREATE TABLE IF NOT EXISTS perguntas_pombagira (
+              id SERIAL PRIMARY KEY,
+              pergunta TEXT NOT NULL,
+              opcao_a TEXT NOT NULL,
+              opcao_b TEXT NOT NULL,
+              opcao_c TEXT NOT NULL,
+              resposta_correta CHAR(1) CHECK (resposta_correta IN ('a', 'b', 'c')),
+              nivel_dificuldade INTEGER DEFAULT 1,
+              tema VARCHAR(50),
+              explicacao TEXT,
+              ativa BOOLEAN DEFAULT TRUE,
+              criada_em TIMESTAMP DEFAULT NOW()
+            );
+
+            -- Inserir 13 perguntas iniciais
+            INSERT INTO perguntas_pombagira 
+            (pergunta, opcao_a, opcao_b, opcao_c, resposta_correta, nivel_dificuldade, tema, explicacao) VALUES
+            ('Qual saudação abre os caminhos na gira?', 'Saravá', 'Laroyê Exu', 'Axé', 'b', 1, 'saudações', 'Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar.'),
+            ('Maria Padilha atua principalmente em qual encruzilhada?', 'De terra', 'De vento', 'De fogo', 'a', 2, 'entidades', 'Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material.'),
+            ('Qual elemento representa Maria Mulambo?', 'Fogo', 'Terra', 'Água', 'b', 2, 'elementos', 'Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade.'),
+            ('Qual dia da semana é mais forte para Pombagira Cigana?', 'Segunda-feira', 'Quarta-feira', 'Sexta-feira', 'b', 3, 'dias', 'Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana.'),
+            ('O que simboliza a navalha de Maria Navalha?', 'Beleza', 'Defesa e astúcia', 'Riqueza', 'b', 2, 'símbolos', 'A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver.'),
+            ('Qual Pombagira está ligada às águas e emoções?', 'Maria Padilha', 'Pombagira da Praia', 'Rosa Caveira', 'b', 1, 'elementos', 'Pombagira da Praia trabalha com as águas e a purificação emocional.'),
+            ('Qual Pombagira é conhecida como "Rainha das Encruzilhadas"?', 'Maria Mulambo', 'Maria Padilha', 'Pombagira Cigana', 'b', 1, 'títulos', 'Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos.'),
+            ('Qual cor está mais associada a Rosa Caveira?', 'Azul', 'Preto e Vermelho', 'Verde', 'b', 2, 'cores', 'Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação).'),
+            ('Sete Saias representa qual energia principal?', 'Tristeza', 'Alegria e dança', 'Sério', 'b', 1, 'energias', 'Sete Saias traz a energia da alegria, dança e celebração da vida.'),
+            ('Pombagira da Figueira conecta com o quê?', 'Futuro', 'Ancestralidade', 'Viagens', 'b', 3, 'conexões', 'Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares.'),
+            ('Qual oferenda é tradicional para Maria Navalha?', 'Champagne', 'Cachaça', 'Vinho', 'b', 2, 'oferendas', 'Maria Navalha aceita cachaça como oferenda, representando a força do povo.'),
+            ('Dama da Noite atua principalmente em qual período?', 'Manhã', 'Noite', 'Tarde', 'b', 1, 'tempo', 'Dama da Noite trabalha com os mistérios e segredos que surgem à noite.'),
+            ('Qual elemento rege Pombagira Menina?', 'Terra', 'Ar', 'Fogo', 'b', 3, 'elementos', 'Pombagira Menina está ligada ao elemento Ar, que representa renovação e novos começos.');
+            `;
+            
+            console.log('📋 SQL para criar tabela com 13 perguntas:');
+            console.log(sql);
+            alert('Copie o SQL acima e execute no SQL Editor do Supabase!');
+        };
+    </script>
+</body>
+</html>
