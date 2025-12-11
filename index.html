@@ -41,23 +41,27 @@
             --borda-vidro: 1px solid rgba(255, 255, 255, 0.1);
             --borda-vidro-dourada: 1px solid rgba(255, 215, 0, 0.3);
             
-            /* Gradientes */
+            /* Gradientes SUTIS para contadores */
+            --gradiente-fe-sutil: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 202, 40, 0.08));
+            --gradiente-gratidao-sutil: linear-gradient(135deg, rgba(233, 30, 99, 0.15), rgba(244, 143, 177, 0.08));
+            --gradiente-acertos-sutil: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(129, 212, 250, 0.08));
+            
+            /* Cores sutis para texto */
+            --cor-fe-sutil: rgba(255, 215, 0, 0.9);
+            --cor-gratidao-sutil: rgba(233, 30, 99, 0.9);
+            --cor-acertos-sutil: rgba(33, 150, 243, 0.9);
+            
+            /* Gradientes para outros elementos */
             --gradiente-roxo: linear-gradient(135deg, var(--roxo-profundo), var(--roxo-vibrante));
             --gradiente-fogo: linear-gradient(135deg, var(--vermelho-sangue), var(--vermelho-fogo));
             --gradiente-ouro: linear-gradient(135deg, var(--ouro), var(--ouro-brilho));
             --gradiente-acerto: linear-gradient(135deg, var(--verde-acerto), #69f0ae);
             --gradiente-erro: linear-gradient(135deg, var(--vermelho-erro), #ff5252);
-            --gradiente-fe: linear-gradient(135deg, var(--ouro), #ffca28);
-            --gradiente-gratidao: linear-gradient(135deg, var(--rosa-pombagira), #f06292);
-            --gradiente-acertos: linear-gradient(135deg, var(--azul-celestial), #4fc3f7);
             
-            /* Efeitos de brilho */
-            --brilho-ouro: 0 0 20px rgba(255, 215, 0, 0.5);
-            --brilho-roxo: 0 0 20px rgba(123, 31, 162, 0.5);
-            --brilho-vermelho: 0 0 20px rgba(255, 61, 0, 0.5);
-            --brilho-verde: 0 0 20px rgba(0, 200, 83, 0.5);
-            --brilho-rosa: 0 0 20px rgba(233, 30, 99, 0.5);
-            --brilho-azul: 0 0 20px rgba(33, 150, 243, 0.5);
+            /* Efeitos de brilho sutis */
+            --brilho-fe-sutil: 0 0 10px rgba(255, 215, 0, 0.3);
+            --brilho-gratidao-sutil: 0 0 10px rgba(233, 30, 99, 0.3);
+            --brilho-acertos-sutil: 0 0 10px rgba(33, 150, 243, 0.3);
         }
 
         body {
@@ -70,7 +74,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
-            padding-top: 120px; /* Espaço para os contadores fixos */
+            padding-top: 90px; /* Espaço para os contadores fixos */
         }
 
         /* Efeito de partículas no fundo */
@@ -82,13 +86,13 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 61, 0, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 61, 0, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* ========== CONTADORES HORIZONTAIS NO TOPO ========== */
+        /* ========== CONTADORES HORIZONTAIS NO TOPO - ESTILO SUTIL ========== */
         #contadores-topo {
             position: fixed;
             top: 0;
@@ -97,12 +101,13 @@
             z-index: 1000;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            padding: 10px;
+            gap: 12px;
+            padding: 12px 10px;
             background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            height: 70px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 75px;
         }
 
         .contador-item-horizontal {
@@ -110,64 +115,105 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8px 15px;
+            padding: 8px 16px;
             min-width: 100px;
-            border-radius: 15px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            cursor: default;
         }
 
         .contador-item-horizontal.fe {
-            background: var(--gradiente-fe);
-            border-color: rgba(255, 215, 0, 0.3);
+            background: var(--gradiente-fe-sutil);
+            border-color: rgba(255, 215, 0, 0.2);
         }
 
         .contador-item-horizontal.gratidao {
-            background: var(--gradiente-gratidao);
-            border-color: rgba(233, 30, 99, 0.3);
+            background: var(--gradiente-gratidao-sutil);
+            border-color: rgba(233, 30, 99, 0.2);
         }
 
         .contador-item-horizontal.acertos {
-            background: var(--gradiente-acertos);
-            border-color: rgba(33, 150, 243, 0.3);
+            background: var(--gradiente-acertos-sutil);
+            border-color: rgba(33, 150, 243, 0.2);
         }
 
         .contador-item-horizontal:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
 
         .contador-item-horizontal .icone {
-            font-size: 20px;
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+            font-size: 18px;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+            opacity: 0.9;
         }
 
         .contador-item-horizontal .nome {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            opacity: 0.9;
+            opacity: 0.7;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             margin-bottom: 2px;
         }
 
         .contador-item-horizontal .valor {
             font-size: 22px;
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Efeitos de pulso nos contadores */
-        @keyframes pulse-valor {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+        /* Cores sutis para os valores */
+        .contador-item-horizontal.fe .valor {
+            color: var(--cor-fe-sutil);
         }
 
-        .pulse-animation {
-            animation: pulse-valor 0.5s ease;
+        .contador-item-horizontal.gratidao .valor {
+            color: var(--cor-gratidao-sutil);
+        }
+
+        .contador-item-horizontal.acertos .valor {
+            color: var(--cor-acertos-sutil);
+        }
+
+        /* Efeitos de animação sutis nos contadores */
+        @keyframes incrementar-fe {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: var(--brilho-fe-sutil); }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        @keyframes incrementar-gratidao {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: var(--brilho-gratidao-sutil); }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        @keyframes incrementar-acertos {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: var(--brilho-acertos-sutil); }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        .animacao-fe {
+            animation: incrementar-fe 0.4s ease;
+        }
+
+        .animacao-gratidao {
+            animation: incrementar-gratidao 0.4s ease;
+        }
+
+        .animacao-acertos {
+            animation: incrementar-acertos 0.4s ease;
         }
 
         /* ========== CONTADOR GLASS DISCRETO ========== */
@@ -175,43 +221,44 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 8px 15px;
+            padding: 6px 12px;
             z-index: 1000;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            background: rgba(10, 10, 10, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.3s ease;
             cursor: default;
             user-select: none;
         }
 
         #contador-glass:hover {
-            background: rgba(10, 10, 10, 0.4);
-            transform: translateY(-2px);
+            background: rgba(10, 10, 10, 0.35);
+            transform: translateY(-1px);
         }
 
         #contador-glass .icone {
-            font-size: 16px;
+            font-size: 14px;
+            opacity: 0.8;
         }
 
         #contador-glass .texto {
-            opacity: 0.8;
+            opacity: 0.7;
             font-weight: 300;
         }
 
         #contador-glass .numero {
-            font-weight: 700;
-            color: var(--ouro);
-            font-size: 16px;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            font-weight: 600;
+            color: rgba(255, 215, 0, 0.9);
+            font-size: 14px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
         }
 
         /* ========== PARTÍCULAS DE CHUVA DE BÊNÇÃO ========== */
@@ -228,10 +275,10 @@
 
         .particula {
             position: absolute;
-            font-size: 24px;
+            font-size: 20px;
             opacity: 0;
             animation: cair linear infinite;
-            filter: drop-shadow(0 0 5px currentColor);
+            filter: drop-shadow(0 0 3px currentColor);
         }
 
         @keyframes cair {
@@ -240,10 +287,10 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.4;
+                opacity: 0.3;
             }
             90% {
-                opacity: 0.4;
+                opacity: 0.3;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg);
@@ -265,35 +312,28 @@
             background: var(--vidro-roxo);
             backdrop-filter: blur(12px);
             border: var(--borda-vidro);
-            box-shadow: var(--sombra-vidro-intensa), var(--brilho-roxo);
+            box-shadow: var(--sombra-vidro-intensa), 0 0 20px rgba(123, 31, 162, 0.3);
         }
 
         .glass-panel-vermelho {
             background: var(--vidro-vermelho);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 61, 0, 0.2);
-            box-shadow: var(--sombra-vidro-intensa), var(--brilho-vermelho);
+            border: 1px solid rgba(255, 61, 0, 0.15);
+            box-shadow: var(--sombra-vidro-intensa), 0 0 20px rgba(255, 61, 0, 0.2);
         }
 
         .glass-panel-ouro {
             background: var(--vidro-ouro);
             backdrop-filter: blur(15px);
             border: var(--borda-vidro-dourada);
-            box-shadow: var(--sombra-vidro-intensa), var(--brilho-ouro);
+            box-shadow: var(--sombra-vidro-intensa), 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
         .glass-panel-verde {
             background: var(--vidro-verde);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 200, 83, 0.3);
-            box-shadow: var(--sombra-vidro-intensa), var(--brilho-verde);
-        }
-
-        .glass-panel-rosa {
-            background: var(--vidro-rosa);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(233, 30, 99, 0.3);
-            box-shadow: var(--sombra-vidro-intensa), var(--brilho-rosa);
+            border: 1px solid rgba(0, 200, 83, 0.2);
+            box-shadow: var(--sombra-vidro-intensa), 0 0 20px rgba(0, 200, 83, 0.2);
         }
 
         /* ========== CONTAINER PRINCIPAL ========== */
@@ -308,8 +348,8 @@
         /* ========== HEADER GLASS ========== */
         .header-glass {
             text-align: center;
-            padding: 30px 20px;
-            margin-bottom: 30px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
             position: relative;
             overflow: hidden;
         }
@@ -324,7 +364,7 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 215, 0, 0.05) 50%,
+                rgba(255, 215, 0, 0.03) 50%,
                 transparent 70%
             );
             animation: shine 8s infinite linear;
@@ -337,19 +377,19 @@
 
         .titulo-principal {
             font-family: 'Cinzel', serif;
-            font-size: 3rem;
-            background: var(--gradiente-ouro);
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 241, 118, 0.7));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 8px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
             position: relative;
         }
 
         .subtitulo {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: rgba(255, 255, 255, 0.8);
             margin-bottom: 20px;
         }
@@ -371,10 +411,10 @@
         }
 
         .pombagira-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(123, 31, 162, 0.3);
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(123, 31, 162, 0.2);
         }
 
         .pombagira-header {
@@ -392,21 +432,21 @@
             align-items: center;
             justify-content: center;
             border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             border: var(--borda-vidro);
         }
 
         .pombagira-titulo {
             font-family: 'Cinzel', serif;
             font-size: 1.4rem;
-            color: var(--ouro);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            color: rgba(255, 215, 0, 0.9);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
         }
 
         .pombagira-dominio {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.7);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             padding: 3px 10px;
             border-radius: 20px;
             display: inline-block;
@@ -429,7 +469,7 @@
 
         .atributo-tag {
             padding: 4px 10px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             border: var(--borda-vidro);
             border-radius: 12px;
             font-size: 0.8rem;
@@ -453,17 +493,17 @@
 
         /* ========== QUIZ SECTION ========== */
         .quiz-container {
-            padding: 30px;
-            margin-bottom: 40px;
+            padding: 25px;
+            margin-bottom: 35px;
             text-align: center;
         }
 
         .quiz-pergunta {
             font-family: 'Cinzel', serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 25px;
-            color: var(--ouro);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            color: rgba(255, 215, 0, 0.9);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
             min-height: 70px;
             display: flex;
             align-items: center;
@@ -487,65 +527,69 @@
             position: relative;
             overflow: hidden;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
         }
 
         .quiz-opcao:hover {
-            transform: translateX(5px);
-            box-shadow: 
-                0 5px 20px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(123, 31, 162, 0.2);
+            transform: translateX(3px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .quiz-opcao.correta {
             animation: acerto 0.6s ease;
-            background: var(--gradiente-acerto);
+            background: linear-gradient(135deg, rgba(0, 200, 83, 0.2), rgba(105, 240, 174, 0.1));
             border-color: rgba(0, 200, 83, 0.3);
-            box-shadow: 0 0 30px rgba(0, 200, 83, 0.3);
+            box-shadow: 0 0 20px rgba(0, 200, 83, 0.15);
         }
 
         .quiz-opcao.incorreta {
             animation: erro 0.6s ease;
-            background: var(--gradiente-erro);
+            background: linear-gradient(135deg, rgba(255, 23, 68, 0.2), rgba(255, 82, 82, 0.1));
             border-color: rgba(255, 23, 68, 0.3);
-            box-shadow: 0 0 30px rgba(255, 23, 68, 0.3);
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.15);
         }
 
         @keyframes acerto {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(0, 200, 83, 0.5); }
+            50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(0, 200, 83, 0.25); }
             100% { transform: scale(1); }
         }
 
         @keyframes erro {
             0% { transform: scale(1); }
-            50% { transform: scale(0.98); box-shadow: 0 0 40px rgba(255, 23, 68, 0.5); }
+            50% { transform: scale(0.98); box-shadow: 0 0 25px rgba(255, 23, 68, 0.25); }
             100% { transform: scale(1); }
         }
 
         .quiz-opcao.selecionada {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         .quiz-botoes {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
             margin-top: 15px;
         }
 
         .botao-glass {
-            padding: 14px 30px;
+            padding: 14px 28px;
             border: none;
             font-family: 'Inter', sans-serif;
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.95rem;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 180px;
+            min-width: 170px;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .botao-glass::after {
@@ -558,7 +602,7 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 50%,
                 transparent 70%
             );
             transform: rotate(45deg);
@@ -570,62 +614,62 @@
         }
 
         .botao-principal {
-            background: var(--gradiente-fogo);
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.9), rgba(255, 61, 0, 0.8));
             color: white;
             border: 1px solid rgba(255, 61, 0, 0.3);
         }
 
         .botao-principal:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 
-                0 10px 25px rgba(255, 61, 0, 0.3),
-                0 0 30px rgba(255, 61, 0, 0.2);
+                0 8px 20px rgba(255, 61, 0, 0.2),
+                0 0 20px rgba(255, 61, 0, 0.15);
         }
 
         .botao-secundario {
-            background: var(--vidro-branco);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.08);
             color: white;
-            border: var(--borda-vidro);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .botao-secundario:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--sombra-vidro-intensa);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .botao-voltar {
-            background: linear-gradient(135deg, #4a148c, #7b1fa2);
+            background: linear-gradient(135deg, rgba(74, 20, 140, 0.9), rgba(123, 31, 162, 0.8));
             color: white;
             border: 1px solid rgba(123, 31, 162, 0.3);
         }
 
         .botao-voltar:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 
-                0 10px 25px rgba(123, 31, 162, 0.3),
-                0 0 30px rgba(123, 31, 162, 0.2);
+                0 8px 20px rgba(123, 31, 162, 0.2),
+                0 0 20px rgba(123, 31, 162, 0.15);
         }
 
         /* ========== RESULTADO SECTION ========== */
         .resultado-container {
-            padding: 40px 20px;
+            padding: 35px 20px;
             text-align: center;
             display: none;
         }
 
         .resultado-titulo {
             font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
-            color: var(--ouro);
+            font-size: 2rem;
+            color: rgba(255, 215, 0, 0.9);
             margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
             animation: pulse-titulo 2s infinite;
         }
 
         @keyframes pulse-titulo {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+            50% { transform: scale(1.01); }
         }
 
         .pombagira-resultado {
@@ -636,30 +680,30 @@
         }
 
         @keyframes aparecer-resultado {
-            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .pombagira-imagem {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             margin: 0 auto 25px;
-            border: 3px solid var(--ouro);
+            border: 2px solid rgba(255, 215, 0, 0.6);
             box-shadow: 
-                0 0 40px rgba(255, 215, 0, 0.5),
-                inset 0 0 40px rgba(0, 0, 0, 0.5);
+                0 0 30px rgba(255, 215, 0, 0.3),
+                inset 0 0 30px rgba(0, 0, 0, 0.3);
             background: var(--gradiente-roxo);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5rem;
+            font-size: 3rem;
             animation: brilhar 3s infinite alternate;
         }
 
         @keyframes brilhar {
-            0% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
-            100% { box-shadow: 0 0 60px rgba(255, 215, 0, 0.8), 0 0 80px rgba(123, 31, 162, 0.6); }
+            0% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 0 50px rgba(123, 31, 162, 0.3); }
         }
 
         .mensagem-audio {
@@ -667,61 +711,39 @@
             line-height: 1.6;
             padding: 18px;
             margin: 18px 0;
-            border-left: 3px solid var(--ouro);
+            border-left: 2px solid rgba(255, 215, 0, 0.6);
             text-align: left;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.15);
             border-radius: 0 10px 10px 0;
-        }
-
-        /* ========== FEEDBACK ANIMAÇÕES ========== */
-        .feedback-acerto {
-            animation: feedbackAcerto 0.5s ease;
-            color: var(--verde-acerto) !important;
-        }
-
-        .feedback-erro {
-            animation: feedbackErro 0.5s ease;
-            color: var(--vermelho-erro) !important;
-        }
-
-        @keyframes feedbackAcerto {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); text-shadow: 0 0 20px var(--verde-acerto); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes feedbackErro {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.9); text-shadow: 0 0 20px var(--vermelho-erro); }
-            100% { transform: scale(1); }
         }
 
         /* ========== RESPONSIVO ========== */
         @media (max-width: 1024px) {
             .titulo-principal {
-                font-size: 2.5rem;
+                font-size: 2.4rem;
             }
             
             .subtitulo {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
             
             #contadores-topo {
-                gap: 8px;
-                padding: 8px;
+                gap: 10px;
+                padding: 10px 8px;
+                height: 70px;
             }
             
             .contador-item-horizontal {
                 min-width: 90px;
-                padding: 6px 12px;
+                padding: 7px 14px;
             }
             
             .contador-item-horizontal .icone {
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .contador-item-horizontal .nome {
-                font-size: 11px;
+                font-size: 10px;
             }
             
             .contador-item-horizontal .valor {
@@ -731,7 +753,7 @@
 
         @media (max-width: 768px) {
             body {
-                padding-top: 100px;
+                padding-top: 80px;
             }
             
             .container {
@@ -740,7 +762,7 @@
             
             .titulo-principal {
                 font-size: 2rem;
-                margin-top: 10px;
+                margin-top: 5px;
             }
             
             .subtitulo {
@@ -748,23 +770,24 @@
             }
             
             #contadores-topo {
-                height: 60px;
-                gap: 5px;
-                padding: 6px;
+                height: 65px;
+                gap: 8px;
+                padding: 8px 6px;
             }
             
             .contador-item-horizontal {
                 min-width: 80px;
-                padding: 5px 10px;
+                padding: 6px 12px;
+                border-radius: 10px;
             }
             
             .contador-item-horizontal .icone {
-                font-size: 16px;
+                font-size: 15px;
                 margin-bottom: 3px;
             }
             
             .contador-item-horizontal .nome {
-                font-size: 10px;
+                font-size: 9px;
                 letter-spacing: 0.5px;
             }
             
@@ -783,31 +806,31 @@
             }
             
             .quiz-pergunta {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 min-height: 60px;
             }
             
             .botao-glass {
-                padding: 12px 25px;
-                min-width: 160px;
-                font-size: 0.95rem;
+                padding: 12px 24px;
+                min-width: 150px;
+                font-size: 0.9rem;
             }
             
             #contador-glass {
                 bottom: 15px;
                 right: 15px;
-                padding: 6px 12px;
-                font-size: 13px;
+                padding: 5px 10px;
+                font-size: 12px;
             }
             
             #contador-glass .numero {
-                font-size: 14px;
+                font-size: 13px;
             }
         }
 
         @media (max-width: 480px) {
             body {
-                padding-top: 90px;
+                padding-top: 70px;
             }
             
             .titulo-principal {
@@ -819,15 +842,15 @@
             }
             
             #contadores-topo {
-                height: 55px;
-                gap: 4px;
-                padding: 5px;
+                height: 60px;
+                gap: 6px;
+                padding: 6px 4px;
             }
             
             .contador-item-horizontal {
                 min-width: 70px;
-                padding: 4px 8px;
-                border-radius: 12px;
+                padding: 5px 10px;
+                border-radius: 8px;
             }
             
             .contador-item-horizontal .icone {
@@ -835,7 +858,7 @@
             }
             
             .contador-item-horizontal .nome {
-                font-size: 9px;
+                font-size: 8px;
                 letter-spacing: 0;
             }
             
@@ -850,7 +873,7 @@
             .botao-glass {
                 padding: 10px 20px;
                 min-width: 140px;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
         }
 
@@ -858,7 +881,7 @@
         @keyframes aparecer {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(15px);
             }
             to {
                 opacity: 1;
@@ -867,37 +890,38 @@
         }
 
         .animar-entrada {
-            animation: aparecer 0.6s ease forwards;
+            animation: aparecer 0.5s ease forwards;
         }
 
-        /* ========== EFEITO DE CONFETTI ========== */
+        /* ========== EFEITO DE CONFETTI SUTIL ========== */
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: var(--ouro);
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 215, 0, 0.6);
             opacity: 0;
             pointer-events: none;
             z-index: 9999;
+            border-radius: 50%;
         }
 
         /* ========== SCROLL BAR PERSONALIZADA ========== */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--roxo-vibrante);
-            border-radius: 5px;
+            background: rgba(123, 31, 162, 0.6);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--vermelho-fogo);
+            background: rgba(255, 61, 0, 0.6);
         }
     </style>
 </head>
@@ -905,7 +929,7 @@
     <!-- Chuva de bênção com símbolos sagrados -->
     <div id="chuva-bencao"></div>
 
-    <!-- CONTADORES HORIZONTAIS NO TOPO -->
+    <!-- CONTADORES HORIZONTAIS NO TOPO - ESTILO SUTIL -->
     <div id="contadores-topo">
         <div class="contador-item-horizontal fe" id="contador-fe-item">
             <div class="icone">🙏</div>
@@ -949,7 +973,7 @@
             <h1 class="titulo-principal">Oráculo das 12 Pombagiras</h1>
             <p class="subtitulo">12 Perguntas Sagradas para Revelar sua Guia Espiritual</p>
             
-            <div class="quiz-botoes" style="margin-top: 25px;">
+            <div class="quiz-botoes" style="margin-top: 20px;">
                 <button class="botao-glass botao-principal" onclick="iniciarQuiz()">
                     🔮 Iniciar Consulta (12 Perguntas)
                 </button>
@@ -960,7 +984,7 @@
         </header>
 
         <div id="secao-todas-pombagiras" class="animar-entrada" style="display: none;">
-            <div class="quiz-botoes" style="margin-bottom: 25px;">
+            <div class="quiz-botoes" style="margin-bottom: 20px;">
                 <button class="botao-glass botao-voltar" onclick="voltarParaInicio()">
                     ← Voltar ao Início
                 </button>
@@ -991,12 +1015,12 @@
             
             <div id="feedback-container" style="margin-top: 15px;"></div>
             
-            <div id="progresso-container" style="margin-top: 25px;">
+            <div id="progresso-container" style="margin-top: 20px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span>Progresso: Pergunta <span id="numero-pergunta">1</span> de 12</span>
                     <span id="contador-perguntas">1/12</span>
                 </div>
-                <div style="height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden;">
+                <div style="height: 5px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden;">
                     <div id="barra-progresso" style="height: 100%; width: 0%; background: var(--gradiente-fogo); transition: width 0.3s ease;"></div>
                 </div>
             </div>
@@ -1212,23 +1236,13 @@
             initContador();
             carregarPerguntas();
             exibirTodasPombagiras();
-            
-            // Adiciona evento de clique nos contadores para efeito
-            document.querySelectorAll('.contador-item-horizontal').forEach(item => {
-                item.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
-                });
-            });
         });
 
         // ========== CHUVA DE BÊNÇÃO ==========
         function iniciarChuvaBencao() {
             const container = document.getElementById('chuva-bencao');
             
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     criarParticula(container);
                 }, i * 400);
@@ -1247,9 +1261,9 @@
             particula.textContent = simbolosSagrados[Math.floor(Math.random() * simbolosSagrados.length)];
             
             particula.style.left = Math.random() * 100 + '%';
-            particula.style.fontSize = (Math.random() * 20 + 14) + 'px';
+            particula.style.fontSize = (Math.random() * 18 + 12) + 'px';
             
-            const cores = ['#ffd700', '#e91e63', '#c62828', '#7b1fa2', '#4a148c', '#2196f3'];
+            const cores = ['rgba(255, 215, 0, 0.4)', 'rgba(233, 30, 99, 0.4)', 'rgba(198, 40, 40, 0.4)', 'rgba(123, 31, 162, 0.4)', 'rgba(74, 20, 140, 0.4)', 'rgba(33, 150, 243, 0.4)'];
             particula.style.color = cores[Math.floor(Math.random() * cores.length)];
             
             const duration = Math.random() * 12 + 12;
@@ -1313,6 +1327,7 @@
 
         // ========== CONTADORES HORIZONTAIS ==========
         function carregarContadoresLocais() {
+            // CARREGA VALORES DO LOCALSTORAGE OU INICIA COM 0
             contadorFe = parseInt(localStorage.getItem('contadorFe')) || 0;
             contadorGratidao = parseInt(localStorage.getItem('contadorGratidao')) || 0;
             contadorAcertos = parseInt(localStorage.getItem('contadorAcertos')) || 0;
@@ -1324,13 +1339,6 @@
             document.getElementById('contador-fe').textContent = contadorFe;
             document.getElementById('contador-gratidao').textContent = contadorGratidao;
             document.getElementById('contador-acertos').textContent = contadorAcertos;
-            
-            // Efeito de pulso nos valores
-            const valores = document.querySelectorAll('.contador-item-horizontal .valor');
-            valores.forEach(valor => {
-                valor.classList.add('pulse-animation');
-                setTimeout(() => valor.classList.remove('pulse-animation'), 500);
-            });
         }
 
         function incrementarContador(tipo) {
@@ -1338,32 +1346,33 @@
                 case 'fe':
                     contadorFe++;
                     localStorage.setItem('contadorFe', contadorFe);
-                    // Efeito visual no contador de fé
-                    document.getElementById('contador-fe-item').style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+                    document.getElementById('contador-fe').textContent = contadorFe;
+                    document.getElementById('contador-fe').classList.add('animacao-fe');
                     setTimeout(() => {
-                        document.getElementById('contador-fe-item').style.boxShadow = '';
-                    }, 500);
+                        document.getElementById('contador-fe').classList.remove('animacao-fe');
+                    }, 400);
                     break;
+                    
                 case 'gratidao':
                     contadorGratidao++;
                     localStorage.setItem('contadorGratidao', contadorGratidao);
-                    // Efeito visual no contador de gratidão
-                    document.getElementById('contador-gratidao-item').style.boxShadow = '0 0 20px rgba(233, 30, 99, 0.5)';
+                    document.getElementById('contador-gratidao').textContent = contadorGratidao;
+                    document.getElementById('contador-gratidao').classList.add('animacao-gratidao');
                     setTimeout(() => {
-                        document.getElementById('contador-gratidao-item').style.boxShadow = '';
-                    }, 500);
+                        document.getElementById('contador-gratidao').classList.remove('animacao-gratidao');
+                    }, 400);
                     break;
+                    
                 case 'acerto':
                     contadorAcertos++;
                     localStorage.setItem('contadorAcertos', contadorAcertos);
-                    // Efeito visual no contador de acertos
-                    document.getElementById('contador-acertos-item').style.boxShadow = '0 0 20px rgba(33, 150, 243, 0.5)';
+                    document.getElementById('contador-acertos').textContent = contadorAcertos;
+                    document.getElementById('contador-acertos').classList.add('animacao-acertos');
                     setTimeout(() => {
-                        document.getElementById('contador-acertos-item').style.boxShadow = '';
-                    }, 500);
+                        document.getElementById('contador-acertos').classList.remove('animacao-acertos');
+                    }, 400);
                     break;
             }
-            atualizarContadoresDisplay();
         }
 
         // ========== SISTEMA DE PERGUNTAS DINÂMICAS ==========
@@ -1539,6 +1548,11 @@
 
         // ========== FUNÇÕES DO QUIZ ==========
         function iniciarQuiz() {
+            // RESETA OS CONTADORES DE ACERTOS APENAS (FÉ E GRATIDÃO PERMANECEM)
+            contadorAcertos = 0;
+            localStorage.setItem('contadorAcertos', 0);
+            atualizarContadoresDisplay();
+            
             quizEmAndamento = true;
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
@@ -1569,7 +1583,7 @@
             pombagiras.forEach(pombagira => {
                 const card = document.createElement('div');
                 card.className = 'pombagira-card glass-panel';
-                card.style.borderLeft = `4px solid ${pombagira.cores[0]}`;
+                card.style.borderLeft = `3px solid ${pombagira.cores[0]}`;
                 
                 card.innerHTML = `
                     <div class="pombagira-header">
@@ -1655,7 +1669,7 @@
             document.getElementById('pular-btn').style.display = 'block';
             document.getElementById('feedback-container').innerHTML = '';
             
-            container.style.animation = 'aparecer 0.5s ease';
+            container.style.animation = 'aparecer 0.4s ease';
         }
 
         function selecionarResposta(letra, elemento) {
@@ -1701,7 +1715,7 @@
             document.getElementById('proxima-btn').style.display = 'block';
             document.getElementById('pular-btn').style.display = 'none';
             
-            criarConfetti(correta ? '#00c853' : '#ff1744');
+            criarConfetti(correta ? 'rgba(0, 200, 83, 0.4)' : 'rgba(255, 23, 68, 0.4)');
         }
 
         function tocarSom(tipo) {
@@ -1717,9 +1731,9 @@
         function mostrarFeedback(mensagem, tipo, explicacao) {
             const container = document.getElementById('feedback-container');
             container.innerHTML = `
-                <div class="glass-panel-${tipo === 'verde' ? 'verde' : 'vermelho'}" style="padding: 15px; animation: aparecer 0.5s ease;">
-                    <strong style="font-size: 1.1rem;">${mensagem}</strong>
-                    <p style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
+                <div class="glass-panel-${tipo === 'verde' ? 'verde' : 'vermelho'}" style="padding: 12px; animation: aparecer 0.4s ease;">
+                    <strong style="font-size: 1rem;">${mensagem}</strong>
+                    <p style="margin-top: 8px; font-size: 0.9rem; opacity: 0.85;">
                         ${explicacao}
                     </p>
                 </div>
@@ -1773,51 +1787,51 @@
                         ${pombagiraResultado.icone}
                     </div>
                     
-                    <h3 style="font-size: 2.3rem; color: #FFD700; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                    <h3 style="font-size: 2.2rem; color: rgba(255, 215, 0, 0.9); margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);">
                         ${pombagiraResultado.nome}
                     </h3>
                     
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px; font-size: 1.2rem;">
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px; font-size: 1.1rem;">
                         ${pombagiraResultado.dominio}
                     </p>
                     
                     <div style="margin: 20px 0;">
-                        <p style="line-height: 1.6; margin-bottom: 20px; font-size: 1.1rem;">
+                        <p style="line-height: 1.6; margin-bottom: 18px; font-size: 1.05rem;">
                             ${pombagiraResultado.descricao}
                         </p>
                         
                         <div class="mensagem-audio glass-panel-ouro">
-                            <strong style="color: #FFD700; display: block; margin-bottom: 10px;">🗣️ Mensagem da ${pombagiraResultado.nome}:</strong>
-                            <p style="margin-top: 10px; font-size: 1.05rem;">"${pombagiraResultado.mensagemAudio}"</p>
+                            <strong style="color: rgba(255, 215, 0, 0.9); display: block; margin-bottom: 8px;">🗣️ Mensagem da ${pombagiraResultado.nome}:</strong>
+                            <p style="margin-top: 10px; font-size: 1rem;">"${pombagiraResultado.mensagemAudio}"</p>
                         </div>
                     </div>
                     
-                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 25px 0;">
-                        <div class="glass-panel" style="padding: 15px 25px;">
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Pontuação Final</div>
-                            <div style="font-weight: bold; font-size: 1.3rem; color: #FFD700;">${pontos} pontos</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0;">
+                        <div class="glass-panel" style="padding: 12px 20px;">
+                            <div style="font-size: 0.85rem; opacity: 0.7;">Pontuação Final</div>
+                            <div style="font-weight: bold; font-size: 1.2rem; color: rgba(255, 215, 0, 0.9);">${pontos} pontos</div>
                         </div>
                         
-                        <div class="glass-panel" style="padding: 15px 25px;">
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Dia Forte</div>
-                            <div style="font-weight: bold; font-size: 1.3rem; color: ${pombagiraResultado.cores[0]};">${pombagiraResultado.dias}</div>
+                        <div class="glass-panel" style="padding: 12px 20px;">
+                            <div style="font-size: 0.85rem; opacity: 0.7;">Dia Forte</div>
+                            <div style="font-weight: bold; font-size: 1.2rem; color: ${pombagiraResultado.cores[0]};">${pombagiraResultado.dias}</div>
                         </div>
                         
-                        <div class="glass-panel" style="padding: 15px 25px;">
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Elemento</div>
-                            <div style="font-weight: bold; font-size: 1.3rem; color: ${pombagiraResultado.cores[1] || pombagiraResultado.cores[0]};">${pombagiraResultado.elemento}</div>
+                        <div class="glass-panel" style="padding: 12px 20px;">
+                            <div style="font-size: 0.85rem; opacity: 0.7;">Elemento</div>
+                            <div style="font-weight: bold; font-size: 1.2rem; color: ${pombagiraResultado.cores[1] || pombagiraResultado.cores[0]};">${pombagiraResultado.elemento}</div>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 25px; padding: 18px; background: rgba(0,0,0,0.2); border-radius: 15px;">
-                        <h4 style="margin-bottom: 12px; color: #FFD700; font-size: 1.2rem;">🎁 Oferendas Recomendadas:</h4>
-                        <p style="opacity: 0.9; font-size: 1.05rem;">${pombagiraResultado.oferendas}</p>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.15); border-radius: 12px;">
+                        <h4 style="margin-bottom: 10px; color: rgba(255, 215, 0, 0.9); font-size: 1.1rem;">🎁 Oferendas Recomendadas:</h4>
+                        <p style="opacity: 0.85; font-size: 1rem;">${pombagiraResultado.oferendas}</p>
                     </div>
                 </div>
             `;
             
             setTimeout(() => {
-                container.style.transform = 'scale(1.02)';
+                container.style.transform = 'scale(1.01)';
                 setTimeout(() => {
                     container.style.transform = 'scale(1)';
                 }, 300);
@@ -1845,59 +1859,59 @@
         }
 
         // ========== EFEITOS VISUAIS ==========
-        function criarConfetti(cor = '#FFD700') {
-            for (let i = 0; i < 15; i++) {
+        function criarConfetti(cor = 'rgba(255, 215, 0, 0.4)') {
+            for (let i = 0; i < 12; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + '%';
                     confetti.style.top = Math.random() * 100 + '%';
                     confetti.style.backgroundColor = cor;
-                    confetti.style.width = Math.random() * 8 + 4 + 'px';
+                    confetti.style.width = Math.random() * 6 + 3 + 'px';
                     confetti.style.height = confetti.style.width;
                     confetti.style.borderRadius = '50%';
-                    confetti.style.opacity = '1';
+                    confetti.style.opacity = '0.8';
                     
                     document.body.appendChild(confetti);
                     
-                    confetti.style.transition = 'all 1s ease';
+                    confetti.style.transition = 'all 0.8s ease';
                     setTimeout(() => {
                         confetti.style.opacity = '0';
-                        confetti.style.transform = 'translateY(100px) rotate(360deg)';
+                        confetti.style.transform = 'translateY(80px) rotate(360deg)';
                     }, 10);
                     
                     setTimeout(() => {
                         if (confetti.parentNode) {
                             confetti.parentNode.removeChild(confetti);
                         }
-                    }, 1100);
+                    }, 900);
                 }, i * 50);
             }
         }
 
         function criarConfettiEspecial() {
-            const cores = ['#FFD700', '#E91E63', '#7B1FA2', '#4A148C', '#C62828', '#2196F3'];
+            const cores = ['rgba(255, 215, 0, 0.4)', 'rgba(233, 30, 99, 0.4)', 'rgba(123, 31, 162, 0.4)', 'rgba(74, 20, 140, 0.4)', 'rgba(198, 40, 40, 0.4)', 'rgba(33, 150, 243, 0.4)'];
             
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + '%';
                     confetti.style.top = '0%';
                     confetti.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-                    confetti.style.width = Math.random() * 12 + 4 + 'px';
+                    confetti.style.width = Math.random() * 8 + 3 + 'px';
                     confetti.style.height = confetti.style.width;
                     confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
-                    confetti.style.opacity = '1';
+                    confetti.style.opacity = '0.8';
                     
                     document.body.appendChild(confetti);
                     
-                    const duration = Math.random() * 1.5 + 1;
+                    const duration = Math.random() * 1.2 + 0.8;
                     confetti.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.3, 1)`;
                     
                     setTimeout(() => {
                         confetti.style.opacity = '0';
-                        confetti.style.transform = `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg) translateX(${Math.random() * 200 - 100}px)`;
+                        confetti.style.transform = `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg) translateX(${Math.random() * 150 - 75}px)`;
                     }, 10);
                     
                     setTimeout(() => {
