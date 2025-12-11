@@ -72,7 +72,7 @@
             z-index: 0;
         }
 
-        /* ========== GLASSMORPHISM UTILITIES ========== */
+        /* ========== GLASSMORPHISM UTILITIES (MANTIDOS) ========== */
         .glass-panel {
             background: var(--vidro-branco);
             backdrop-filter: blur(10px);
@@ -102,66 +102,65 @@
             border: var(--borda-vidro-dourada);
             box-shadow: var(--sombra-vidro-intensa), var(--brilho-ouro);
         }
-
-        /* ========== CONTADOR GLASS ========== */
+        
+        /* ========== CONTADOR GLASS - MAIS DISCRETO (NOVO ESTILO) ========== */
         #contador-glass {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 10px 20px;
+            padding: 8px 15px; 
             z-index: 1000;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            background: rgba(74, 20, 140, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* Efeito glassmorphism mais sutil e escuro */
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(10, 10, 10, 0.2); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 50px;
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+            font-size: 13px; 
+            color: rgba(255, 255, 255, 0.7); 
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.3s ease;
-            cursor: pointer;
+            cursor: default; 
             user-select: none;
         }
 
         #contador-glass:hover {
-            background: rgba(123, 31, 162, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 6px 25px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: rgba(10, 10, 10, 0.3); 
+            transform: none; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         #contador-glass .icone {
-            font-size: 16px;
-            animation: pulse 2s infinite;
+            font-size: 14px; 
+            animation: none; 
+        }
+
+        #contador-glass .texto {
+            opacity: 0.7; /* Texto 'Consultas' mais apagado */
         }
 
         #contador-glass .numero {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--ouro);
-            font-size: 16px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 15px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
         }
-
+        
         #contador-glass .status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00ff88;
-            box-shadow: 0 0 10px #00ff88;
+            display: none; /* Removido para discrição */
         }
 
+        /* Remova o keyframes pulse se não for mais usado - Mantido para outras animações */
         @keyframes pulse {
             0%, 100% { opacity: 0.8; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* ========== CONTAINER PRINCIPAL ========== */
+        /* Demais estilos mantidos para a funcionalidade do quiz e pombagiras */
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -170,7 +169,6 @@
             z-index: 1;
         }
 
-        /* ========== HEADER GLASS ========== */
         .header-glass {
             text-align: center;
             padding: 40px 20px;
@@ -219,7 +217,6 @@
             margin-bottom: 20px;
         }
 
-        /* ========== SEÇÃO DE POMBAGIRAS ========== */
         .secao-pombagiras {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -491,8 +488,8 @@
             #contador-glass {
                 bottom: 10px;
                 right: 10px;
-                padding: 8px 15px;
-                font-size: 12px;
+                padding: 6px 12px;
+                font-size: 11px;
             }
             
             .botao-glass {
@@ -520,16 +517,13 @@
     </style>
 </head>
 <body>
-    <!-- Contador Glass -->
-    <div id="contador-glass" title="Consultas ao Oráculo">
-        <span class="icone">🔮</span>
+    <div id="contador-glass" title="Total de Consultas ao Oráculo">
+        <span class="icone">👁️</span>
         <span class="texto">Consultas:</span>
         <span class="numero" id="contador-numero">0</span>
-        <span class="status" id="contador-status"></span>
     </div>
 
     <div class="container">
-        <!-- Header -->
         <header class="header-glass glass-panel-roxo animar-entrada">
             <h1 class="titulo-principal">Oráculo das 12 Pombagiras</h1>
             <p class="subtitulo">12 Perguntas para Revelar sua Guia Espiritual</p>
@@ -544,7 +538,6 @@
             </div>
         </header>
 
-        <!-- Seção de Todas as Pombagiras -->
         <div id="secao-todas-pombagiras" class="animar-entrada" style="display: none;">
             <div class="quiz-botoes" style="margin-bottom: 30px;">
                 <button class="botao-glass botao-voltar" onclick="voltarParaInicio()">
@@ -553,19 +546,16 @@
             </div>
             
             <div class="secao-pombagiras" id="container-pombagiras">
-                <!-- As 12 Pombagiras serão inseridas aqui via JavaScript -->
-            </div>
+                </div>
         </div>
 
-        <!-- Seção do Quiz -->
         <div id="quiz-section" class="quiz-container glass-panel-roxo animar-entrada" style="display: none;">
             <div class="quiz-pergunta" id="pergunta-atual">
                 Carregando pergunta...
             </div>
             
             <div class="quiz-opcoes" id="opcoes-container">
-                <!-- Opções serão inseridas aqui -->
-            </div>
+                </div>
             
             <div class="quiz-botoes">
                 <button class="botao-glass botao-secundario" onclick="pularPergunta()" id="pular-btn">
@@ -589,13 +579,11 @@
             </div>
         </div>
 
-        <!-- Seção de Resultado -->
         <div id="resultado-section" class="resultado-container glass-panel-ouro animar-entrada" style="display: none;">
             <h2 class="resultado-titulo">Sua Pombagira Guia é:</h2>
             
             <div id="pombagira-resultado" class="pombagira-resultado glass-panel-roxo">
-                <!-- Resultado será inserido aqui -->
-            </div>
+                </div>
             
             <div class="quiz-botoes">
                 <button class="botao-glass botao-principal" onclick="compartilharResultado()">
@@ -615,38 +603,14 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ========== SISTEMA DE CONTADOR MELHORADO ==========
+        // ========== SISTEMA DE CONTADOR DINÂMICO (NOVO) ==========
         async function initContador() {
             try {
-                console.log('🔮 Iniciando contador...');
+                // 1. Tenta ATOMICAMENTE incrementar o contador no Supabase usando um RPC (mais seguro)
+                // OBS: Como não temos o RPC aqui, usaremos a lógica de UPDATE/SELECT sequencial mais simples
                 
-                // SEMPRE tentar atualizar o Supabase primeiro
-                const resultado = await atualizarContadorSupabase();
-                
-                if (resultado.success) {
-                    // Supabase funcionou - usar valor do banco
-                    document.getElementById('contador-numero').textContent = resultado.total;
-                    atualizarStatusContador('online');
-                    console.log(`✅ Contador online: ${resultado.total} consultas`);
-                    
-                    // Sincronizar localStorage com Supabase
-                    localStorage.setItem('oraculo_sync_count', resultado.total);
-                } else {
-                    // Supabase falhou - usar modo offline
-                    console.warn('⚠️ Modo offline ativado');
-                    usarContadorOffline();
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro no contador:', error);
-                usarContadorOffline();
-            }
-        }
-
-        async function atualizarContadorSupabase() {
-            try {
                 // 1. Buscar contador atual
-                const { data: registro, error: buscaError } = await supabase
+                let { data: registro, error: buscaError } = await supabase
                     .from('oraculo_pombagira')
                     .select('total_consultas')
                     .eq('nome', 'oraculo_12_pombagiras')
@@ -658,7 +622,7 @@
                 
                 let novaContagem;
                 
-                // 2. Se não existe registro, criar com 1
+                // 2. Se não existe registro, cria com 1
                 if (!registro) {
                     novaContagem = 1;
                     const { error: insertError } = await supabase
@@ -671,7 +635,7 @@
                     if (insertError) throw insertError;
                     
                 } else {
-                    // 3. Se existe, incrementar
+                    // 3. Se existe, INCREMENTA e ATUALIZA
                     novaContagem = (registro.total_consultas || 0) + 1;
                     const { error: updateError } = await supabase
                         .from('oraculo_pombagira')
@@ -684,100 +648,26 @@
                     if (updateError) throw updateError;
                 }
                 
-                return { success: true, total: novaContagem };
+                // 4. Atualiza o DOM
+                document.getElementById('contador-numero').textContent = novaContagem;
                 
             } catch (error) {
-                console.error('Erro ao atualizar Supabase:', error);
-                return { success: false, error: error.message };
-            }
-        }
-
-        function usarContadorOffline() {
-            // Verificar se já contou nesta sessão
-            if (!sessionStorage.getItem('oraculo_session_counted')) {
+                console.error('❌ Erro no contador Supabase, usando contador local (offline):', error);
+                // Fallback para contador local em caso de falha
                 let localCount = localStorage.getItem('oraculo_local_count') || 0;
                 localCount = parseInt(localCount) + 1;
                 localStorage.setItem('oraculo_local_count', localCount);
-                sessionStorage.setItem('oraculo_session_counted', 'true');
-                
-                // Tentar sincronizar depois
-                setTimeout(tentarSincronizarOffline, 3000);
-            }
-            
-            // Mostrar contagem total (local + sync)
-            const localCount = parseInt(localStorage.getItem('oraculo_local_count') || 0);
-            const syncCount = parseInt(localStorage.getItem('oraculo_sync_count') || 0);
-            const totalDisplay = localCount + syncCount;
-            
-            document.getElementById('contador-numero').textContent = totalDisplay;
-            atualizarStatusContador('offline');
-            console.log(`📱 Contador offline: ${totalDisplay} (local: ${localCount}, sync: ${syncCount})`);
-        }
-
-        async function tentarSincronizarOffline() {
-            try {
-                const localCount = parseInt(localStorage.getItem('oraculo_local_count') || 0);
-                if (localCount > 0) {
-                    console.log('🔄 Tentando sincronizar contador offline...');
-                    
-                    const { data: registro } = await supabase
-                        .from('oraculo_pombagira')
-                        .select('total_consultas')
-                        .eq('nome', 'oraculo_12_pombagiras')
-                        .single();
-                    
-                    if (registro) {
-                        const novoTotal = (registro.total_consultas || 0) + localCount;
-                        
-                        await supabase
-                            .from('oraculo_pombagira')
-                            .update({ 
-                                total_consultas: novoTotal,
-                                atualizado_em: new Date().toISOString()
-                            })
-                            .eq('nome', 'oraculo_12_pombagiras');
-                        
-                        // Limpar contador local após sincronização
-                        localStorage.setItem('oraculo_local_count', 0);
-                        localStorage.setItem('oraculo_sync_count', novoTotal);
-                        
-                        console.log(`✅ Sincronizado: +${localCount} visitas`);
-                    }
-                }
-            } catch (error) {
-                console.log('📴 Ainda offline, tentando depois...');
+                document.getElementById('contador-numero').textContent = `~${localCount}`;
             }
         }
+        
+        // Função dummy para manter compatibilidade, mas a lógica principal está em initContador
+        function atualizarStatusContador(status) {}
+        function tentarSincronizarOffline() {}
+        function usarContadorOffline() {}
 
-        function atualizarStatusContador(status) {
-            const statusDot = document.getElementById('contador-status');
-            if (!statusDot) return;
-            
-            if (status === 'online') {
-                statusDot.style.background = '#00ff88';
-                statusDot.style.boxShadow = '0 0 10px #00ff88';
-                statusDot.title = 'Conectado ao Supabase';
-            } else {
-                statusDot.style.background = '#FFA726';
-                statusDot.style.boxShadow = '0 0 10px #FFA726';
-                statusDot.title = 'Modo offline - sincronizando depois';
-            }
-        }
 
-        function animarContador() {
-            const numero = document.getElementById('contador-numero');
-            if (!numero) return;
-            
-            numero.style.transform = 'scale(1.3)';
-            numero.style.color = '#FFD700';
-            
-            setTimeout(() => {
-                numero.style.transform = 'scale(1)';
-                numero.style.color = '#FFD700';
-            }, 300);
-        }
-
-        // ========== DADOS DAS 12 POMBAGIRAS ==========
+        // ========== DADOS FIXOS DAS POMBAGIRAS (MANTIDO) ==========
         const pombagiras = [
             {
                 id: 1,
@@ -944,30 +834,37 @@
         let pontos = 0;
         let pombagiraResultado = null;
 
-        // ========== SISTEMA DE PERGUNTAS ==========
+        // ========== SISTEMA DE PERGUNTAS DINÂMICAS (NOVO) ==========
         async function carregarPerguntas() {
             try {
-                // Tentar carregar do Supabase
+                // Seleciona 12 perguntas aleatórias do banco de dados (MODO DINÂMICO)
                 const { data: perguntasDB, error } = await supabase
                     .from('perguntas_pombagira')
                     .select('*')
                     .eq('ativa', true)
-                    .limit(12);
+                    .limit(12)
+                    .order('id', { ascending: false, nullsFirst: false }); // Ordenação aleatória pode ser implementada com um "ORDER BY random()" se o RLS permitir, mas aqui apenas limitamos os 12 últimos. Para ser verdadeiramente dinâmico, o servidor Supabase precisaria de uma função ou RPC para `ORDER BY random()`. Usaremos a ordenação padrão e embaralharemos no cliente.
                 
-                if (!error && perguntasDB && perguntasDB.length >= 12) {
-                    perguntasQuiz = perguntasDB;
-                    console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
+                if (error) throw error;
+
+                if (perguntasDB && perguntasDB.length >= 12) {
+                    // Embaralha no cliente para simular a ordem dinâmica a cada acesso
+                    perguntasQuiz = embaralharArray(perguntasDB).slice(0, 12);
+                    console.log(`✅ ${perguntasQuiz.length} perguntas carregadas e embaralhadas do Supabase`);
                 } else {
                     perguntasQuiz = gerar12PerguntasFixas();
-                    console.log('📱 Usando 12 perguntas fixas');
+                    perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
+                    console.log('⚠️ Supabase não retornou dados suficientes. Usando perguntas fixas embaralhadas.');
                 }
                 
             } catch (error) {
-                console.error('Erro ao carregar perguntas:', error);
+                console.error('❌ Erro ao carregar perguntas, usando fallback:', error);
                 perguntasQuiz = gerar12PerguntasFixas();
+                perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
             }
         }
 
+        // Função mantida, mas agora é o FALLBACK
         function gerar12PerguntasFixas() {
             return [
                 {
@@ -1019,7 +916,7 @@
                     explicacao: "Pombagira da Praia trabalha com as águas e a purificação emocional."
                 },
                 {
-                    pergunta: "Qual Pombagira é conhecida como 'Rainha das Encruzilhadas'?",
+                    pergunta: "Qual Pombagira é conhecida como \"Rainha das Encruzilhadas\"?",
                     opcao_a: "Maria Mulambo",
                     opcao_b: "Maria Padilha",
                     opcao_c: "Pombagira Cigana",
@@ -1069,21 +966,22 @@
             ];
         }
 
-        // ========== INTERFACE DO QUIZ ==========
+        // ========== INTERFACE E LÓGICA DO QUIZ (MANTIDO) ==========
         function iniciarQuiz() {
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
             document.getElementById('quiz-section').style.display = 'block';
             document.getElementById('resultado-section').style.display = 'none';
             
-            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
-            perguntaAtual = 0;
-            respostasUsuario = [];
-            pontos = 0;
-            
-            mostrarPergunta();
+            // Refaz o carregamento e embaralhamento para garantir dinâmica a cada início
+            carregarPerguntas().then(() => {
+                perguntaAtual = 0;
+                respostasUsuario = [];
+                pontos = 0;
+                mostrarPergunta();
+            });
         }
-
+        
         function mostrarTodasPombagiras() {
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'block';
@@ -1149,7 +1047,7 @@
         }
 
         function mostrarPergunta() {
-            if (perguntaAtual >= 12) {
+            if (perguntaAtual >= 12 || perguntasQuiz.length === 0) {
                 finalizarQuiz();
                 return;
             }
@@ -1248,26 +1146,27 @@
             
             let pombagiraIndex;
             
+            // Lógica de atribuição baseada na pontuação (mantida)
             if (porcentagem >= 90) {
-                pombagiraIndex = 0;
+                pombagiraIndex = 0; // Maria Padilha
             } else if (porcentagem >= 80) {
-                pombagiraIndex = 2;
+                pombagiraIndex = 2; // Maria Quitéria
             } else if (porcentagem >= 70) {
-                pombagiraIndex = 6;
+                pombagiraIndex = 6; // Cigana
             } else if (porcentagem >= 60) {
-                pombagiraIndex = 1;
+                pombagiraIndex = 1; // Maria Mulambo
             } else if (porcentagem >= 50) {
-                pombagiraIndex = 4;
+                pombagiraIndex = 4; // Dama da Noite
             } else if (porcentagem >= 40) {
-                pombagiraIndex = 10;
+                pombagiraIndex = 10; // Menina
             } else if (porcentagem >= 30) {
-                pombagiraIndex = 3;
+                pombagiraIndex = 3; // Rosa Caveira
             } else if (porcentagem >= 20) {
-                pombagiraIndex = 5;
+                pombagiraIndex = 5; // Sete Saias
             } else if (porcentagem >= 10) {
-                pombagiraIndex = 8;
+                pombagiraIndex = 8; // Maria Navalha
             } else {
-                pombagiraIndex = 11;
+                pombagiraIndex = 11; // Da Figueira (Fallback)
             }
             
             pombagiraResultado = pombagiras[pombagiraIndex];
@@ -1345,7 +1244,7 @@
             }
         }
 
-        // ========== UTILIDADES ==========
+        // ========== UTILIDADES (MANTIDO) ==========
         function embaralharArray(array) {
             const novoArray = [...array];
             for (let i = novoArray.length - 1; i > 0; i--) {
@@ -1358,8 +1257,8 @@
         // ========== INICIALIZAÇÃO ==========
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✨ Oráculo das 12 Pombagiras iniciando...');
-            initContador();
-            carregarPerguntas();
+            initContador(); // Inicia o contador e o incrementa
+            carregarPerguntas(); // Pré-carrega as perguntas dinâmicas
             exibirTodasPombagiras();
         });
     </script>
