@@ -235,22 +235,6 @@
             overflow: hidden;
         }
 
-        .pombagira-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .pombagira-card:hover::before {
-            opacity: 1;
-        }
-
         .pombagira-card:hover {
             transform: translateY(-5px);
             box-shadow: 
@@ -331,11 +315,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        .detalhe-item i {
-            color: var(--ouro);
-            width: 20px;
-        }
-
         /* ========== QUIZ SECTION ========== */
         .quiz-container {
             padding: 40px;
@@ -363,24 +342,7 @@
             padding: 18px 25px;
             text-align: left;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             cursor: pointer;
-        }
-
-        .quiz-opcao::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s;
-        }
-
-        .quiz-opcao:hover::before {
-            left: 100%;
         }
 
         .quiz-opcao:hover {
@@ -419,24 +381,7 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             min-width: 200px;
-        }
-
-        .botao-glass::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .botao-glass:hover::before {
-            left: 100%;
         }
 
         .botao-principal {
@@ -599,7 +544,7 @@
             </div>
         </header>
 
-        <!-- Seção de Todas as Pombagiras (Inicialmente oculta) -->
+        <!-- Seção de Todas as Pombagiras -->
         <div id="secao-todas-pombagiras" class="animar-entrada" style="display: none;">
             <div class="quiz-botoes" style="margin-bottom: 30px;">
                 <button class="botao-glass botao-voltar" onclick="voltarParaInicio()">
@@ -669,8 +614,7 @@
         const SUPABASE_URL = 'https://qvbjwzszdijhydgcqvyu.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
         
-        // Nome da tabela para o novo oráculo
-        const ORACULO_NOME = 'oraculo_12_pombagiras';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // ========== DADOS DAS 12 POMBAGIRAS ==========
         const pombagiras = [
@@ -846,25 +790,23 @@
             // Iniciar contador
             await initContador();
             
-            // Carregar todas as perguntas do Supabase
+            // Carregar perguntas
             await carregarPerguntas();
             
-            // Exibir todas as Pombagiras inicialmente
+            // Exibir todas as Pombagiras
             exibirTodasPombagiras();
         });
 
         // ========== CONTADOR SUPABASE ==========
         async function initContador() {
             try {
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                
                 // Verificar se já visitou nesta sessão
                 if (!sessionStorage.getItem('oraculo_12_visitado')) {
-                    await incrementarContador(supabase);
+                    await incrementarContador();
                     sessionStorage.setItem('oraculo_12_visitado', 'true');
                     atualizarStatusContador('online');
                 } else {
-                    await mostrarContagemAtual(supabase);
+                    await mostrarContagemAtual();
                     atualizarStatusContador('online');
                 }
                 
@@ -874,31 +816,18 @@
             }
         }
 
-        async function incrementarContador(supabase) {
+        async function incrementarContador() {
             try {
-                // Primeiro tentar UPSERT (atualizar ou criar)
+                // Buscar contagem atual
                 const { data: registroAtual, error: erroBusca } = await supabase
                     .from('oraculo_pombagira')
                     .select('total_consultas')
-                    .eq('nome', ORACULO_NOME)
+                    .eq('nome', 'oraculo_12_pombagiras')
                     .single();
                 
-                let novaContagem;
+                let novaContagem = 1;
                 
-                if (erroBusca || !registroAtual) {
-                    // Criar novo registro
-                    novaContagem = 1;
-                    const { error: erroCriar } = await supabase
-                        .from('oraculo_pombagira')
-                        .insert([{
-                            nome: ORACULO_NOME,
-                            descricao: 'Oráculo das 12 Pombagiras - Glassmorphism',
-                            total_consultas: novaContagem
-                        }]);
-                    
-                    if (erroCriar) throw erroCriar;
-                    
-                } else {
+                if (!erroBusca && registroAtual) {
                     // Atualizar existente
                     novaContagem = (registroAtual.total_consultas || 0) + 1;
                     const { error: erroAtualizar } = await supabase
@@ -907,9 +836,19 @@
                             total_consultas: novaContagem,
                             atualizado_em: new Date().toISOString()
                         })
-                        .eq('nome', ORACULO_NOME);
+                        .eq('nome', 'oraculo_12_pombagiras');
                     
                     if (erroAtualizar) throw erroAtualizar;
+                } else {
+                    // Criar novo (fallback)
+                    const { error: erroCriar } = await supabase
+                        .from('oraculo_pombagira')
+                        .insert([{
+                            nome: 'oraculo_12_pombagiras',
+                            total_consultas: novaContagem
+                        }]);
+                    
+                    if (erroCriar) throw erroCriar;
                 }
                 
                 // Atualizar display
@@ -923,12 +862,12 @@
             }
         }
 
-        async function mostrarContagemAtual(supabase) {
+        async function mostrarContagemAtual() {
             try {
                 const { data } = await supabase
                     .from('oraculo_pombagira')
                     .select('total_consultas')
-                    .eq('nome', ORACULO_NOME)
+                    .eq('nome', 'oraculo_12_pombagiras')
                     .single();
                 
                 if (data) {
@@ -981,14 +920,11 @@
         // ========== SISTEMA DE PERGUNTAS ==========
         async function carregarPerguntas() {
             try {
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                
                 // Tentar carregar do Supabase
                 const { data: perguntasDB, error } = await supabase
                     .from('perguntas_pombagira')
                     .select('*')
                     .eq('ativa', true)
-                    .order('nivel_dificuldade')
                     .limit(12);
                 
                 if (!error && perguntasDB && perguntasDB.length >= 12) {
@@ -996,7 +932,7 @@
                     perguntasQuiz = perguntasDB;
                     console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
                 } else {
-                    // Usar perguntas fixas como fallback (agora com 12 perguntas!)
+                    // Usar perguntas fixas como fallback
                     perguntasQuiz = gerar12PerguntasFixas();
                     console.log('📱 Usando 12 perguntas fixas');
                 }
@@ -1015,8 +951,6 @@
                     opcao_b: "Laroyê Exu",
                     opcao_c: "Axé",
                     resposta_correta: "b",
-                    nivel_dificuldade: 1,
-                    tema: "saudações",
                     explicacao: "Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar."
                 },
                 {
@@ -1025,8 +959,6 @@
                     opcao_b: "De vento",
                     opcao_c: "De fogo",
                     resposta_correta: "a",
-                    nivel_dificuldade: 2,
-                    tema: "entidades",
                     explicacao: "Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material."
                 },
                 {
@@ -1035,8 +967,6 @@
                     opcao_b: "Terra",
                     opcao_c: "Água",
                     resposta_correta: "b",
-                    nivel_dificuldade: 2,
-                    tema: "elementos",
                     explicacao: "Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade."
                 },
                 {
@@ -1045,8 +975,6 @@
                     opcao_b: "Quarta-feira",
                     opcao_c: "Sexta-feira",
                     resposta_correta: "b",
-                    nivel_dificuldade: 3,
-                    tema: "dias",
                     explicacao: "Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana."
                 },
                 {
@@ -1055,8 +983,6 @@
                     opcao_b: "Defesa e astúcia",
                     opcao_c: "Riqueza",
                     resposta_correta: "b",
-                    nivel_dificuldade: 2,
-                    tema: "símbolos",
                     explicacao: "A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver."
                 },
                 {
@@ -1065,8 +991,6 @@
                     opcao_b: "Pombagira da Praia",
                     opcao_c: "Rosa Caveira",
                     resposta_correta: "b",
-                    nivel_dificuldade: 1,
-                    tema: "elementos",
                     explicacao: "Pombagira da Praia trabalha com as águas e a purificação emocional."
                 },
                 {
@@ -1075,8 +999,6 @@
                     opcao_b: "Maria Padilha",
                     opcao_c: "Pombagira Cigana",
                     resposta_correta: "b",
-                    nivel_dificuldade: 1,
-                    tema: "títulos",
                     explicacao: "Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos."
                 },
                 {
@@ -1085,8 +1007,6 @@
                     opcao_b: "Preto e Vermelho",
                     opcao_c: "Verde",
                     resposta_correta: "b",
-                    nivel_dificuldade: 2,
-                    tema: "cores",
                     explicacao: "Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação)."
                 },
                 {
@@ -1095,8 +1015,6 @@
                     opcao_b: "Alegria e dança",
                     opcao_c: "Sério",
                     resposta_correta: "b",
-                    nivel_dificuldade: 1,
-                    tema: "energias",
                     explicacao: "Sete Saias traz a energia da alegria, dança e celebração da vida."
                 },
                 {
@@ -1105,8 +1023,6 @@
                     opcao_b: "Ancestralidade",
                     opcao_c: "Viagens",
                     resposta_correta: "b",
-                    nivel_dificuldade: 3,
-                    tema: "conexões",
                     explicacao: "Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares."
                 },
                 {
@@ -1115,8 +1031,6 @@
                     opcao_b: "Cachaça",
                     opcao_c: "Vinho",
                     resposta_correta: "b",
-                    nivel_dificuldade: 2,
-                    tema: "oferendas",
                     explicacao: "Maria Navalha aceita cachaça como oferenda, representando a força do povo."
                 },
                 {
@@ -1125,8 +1039,6 @@
                     opcao_b: "Noite",
                     opcao_c: "Tarde",
                     resposta_correta: "b",
-                    nivel_dificuldade: 1,
-                    tema: "tempo",
                     explicacao: "Dama da Noite trabalha com os mistérios e segredos que surgem à noite."
                 }
             ];
@@ -1141,7 +1053,7 @@
             document.getElementById('resultado-section').style.display = 'none';
             
             // Embaralhar perguntas e pegar 12
-            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12); // AGORA É 12 PERGUNTAS!
+            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
             
             // Iniciar primeira pergunta
             perguntaAtual = 0;
@@ -1216,7 +1128,7 @@
         }
 
         function mostrarPergunta() {
-            if (perguntaAtual >= 12) { // AGORA É 12!
+            if (perguntaAtual >= 12) {
                 finalizarQuiz();
                 return;
             }
@@ -1248,11 +1160,8 @@
             });
             
             // Atualizar progresso
-            document.getElementById('contador-perguntas').textContent = 
-                `${perguntaAtual + 1}/12`; // FIXO EM 12!
-            
-            document.getElementById('barra-progresso').style.width = 
-                `${((perguntaAtual + 1) / 12) * 100}%`; // FIXO EM 12!
+            document.getElementById('contador-perguntas').textContent = `${perguntaAtual + 1}/12`;
+            document.getElementById('barra-progresso').style.width = `${((perguntaAtual + 1) / 12) * 100}%`;
             
             // Esconder botão próximo
             document.getElementById('proxima-btn').style.display = 'none';
@@ -1274,7 +1183,7 @@
             // Marcar resposta
             if (correta) {
                 elemento.classList.add('correta');
-                pontos += pergunta.nivel_dificuldade * 10;
+                pontos += 10;
                 mostrarFeedback('✅ Resposta Correta!', 'verde');
             } else {
                 elemento.classList.add('incorreta');
@@ -1327,10 +1236,10 @@
 
         function finalizarQuiz() {
             // Calcular Pombagira baseado nos pontos
-            const maxPontos = 12 * 30; // 12 perguntas * máximo 30 pontos cada
+            const maxPontos = 120; // 12 perguntas * 10 pontos cada
             const porcentagem = (pontos / maxPontos) * 100;
             
-            // Determinar Pombagira baseado na pontuação (agora mais preciso com 12 perguntas)
+            // Determinar Pombagira baseado na pontuação
             let pombagiraIndex;
             
             if (porcentagem >= 90) {
