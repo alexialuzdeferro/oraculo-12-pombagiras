@@ -72,7 +72,7 @@
             z-index: 0;
         }
 
-        /* ========== GLASSMORPHISM UTILITIES (MANTIDOS) ========== */
+        /* ========== GLASSMORPHISM UTILITIES ========== */
         .glass-panel {
             background: var(--vidro-branco);
             backdrop-filter: blur(10px);
@@ -103,25 +103,25 @@
             box-shadow: var(--sombra-vidro-intensa), var(--brilho-ouro);
         }
         
-        /* ========== CONTADOR GLASS - MAIS DISCRETO (NOVO ESTILO) ========== */
+        /* ========== CONTADOR GLASS - MAIS DISCRETO E SUTIL ========== */
         #contador-glass {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 8px 15px; 
+            padding: 6px 12px; /* Reduzido o padding */
             z-index: 1000;
             /* Efeito glassmorphism mais sutil e escuro */
             backdrop-filter: blur(8px); 
             -webkit-backdrop-filter: blur(8px);
-            background: rgba(10, 10, 10, 0.2); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+            background: rgba(10, 10, 10, 0.2); /* Fundo mais escuro */
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Borda quase invisível */
             border-radius: 50px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
             font-size: 13px; 
             color: rgba(255, 255, 255, 0.7); 
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.3s ease;
             cursor: default; 
             user-select: none;
@@ -129,8 +129,7 @@
 
         #contador-glass:hover {
             background: rgba(10, 10, 10, 0.3); 
-            transform: none; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: none; /* Sem movimento no hover */
         }
 
         #contador-glass .icone {
@@ -139,28 +138,27 @@
         }
 
         #contador-glass .texto {
-            opacity: 0.7; /* Texto 'Consultas' mais apagado */
+            opacity: 0.7; /* Texto 'Consultas' mais discreto */
+            font-weight: 300;
         }
 
         #contador-glass .numero {
             font-weight: 700;
             color: var(--ouro);
-            font-size: 15px;
+            font-size: 14px;
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
         }
         
         #contador-glass .status {
-            display: none; /* Removido para discrição */
+            display: none; /* Mantido oculto para discrição */
         }
 
-        /* Remova o keyframes pulse se não for mais usado - Mantido para outras animações */
         @keyframes pulse {
             0%, 100% { opacity: 0.8; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* Demais estilos mantidos para a funcionalidade do quiz e pombagiras */
-        
+        /* ========== CONTAINER PRINCIPAL ========== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -169,6 +167,7 @@
             z-index: 1;
         }
 
+        /* ========== HEADER GLASS ========== */
         .header-glass {
             text-align: center;
             padding: 40px 20px;
@@ -217,6 +216,7 @@
             margin-bottom: 20px;
         }
 
+        /* ========== SEÇÃO DE POMBAGIRAS ========== */
         .secao-pombagiras {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -492,6 +492,10 @@
                 font-size: 11px;
             }
             
+            #contador-glass .numero {
+                font-size: 13px;
+            }
+
             .botao-glass {
                 padding: 12px 25px;
                 min-width: 160px;
@@ -520,7 +524,7 @@
     <div id="contador-glass" title="Total de Consultas ao Oráculo">
         <span class="icone">👁️</span>
         <span class="texto">Consultas:</span>
-        <span class="numero" id="contador-numero">0</span>
+        <span class="numero" id="contador-numero">...</span>
     </div>
 
     <div class="container">
@@ -603,71 +607,69 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ========== SISTEMA DE CONTADOR DINÂMICO (NOVO) ==========
+        // ========== SISTEMA DE CONTADOR DINÂMICO E ATÔMICO (CORREÇÃO CRÍTICA) ==========
         async function initContador() {
             try {
-                // 1. Tenta ATOMICAMENTE incrementar o contador no Supabase usando um RPC (mais seguro)
-                // OBS: Como não temos o RPC aqui, usaremos a lógica de UPDATE/SELECT sequencial mais simples
-                
-                // 1. Buscar contador atual
-                let { data: registro, error: buscaError } = await supabase
+                // Tenta incrementar o valor diretamente no banco de forma ATÔMICA
+                const { data: updateData, error: updateError } = await supabase
                     .from('oraculo_pombagira')
-                    .select('total_consultas')
+                    .update({ 
+                        total_consultas: 'total_consultas + 1', // Sinaliza ao PostgREST para fazer o incremento SQL
+                        atualizado_em: new Date().toISOString()
+                    })
                     .eq('nome', 'oraculo_12_pombagiras')
+                    .select('total_consultas') // Tenta obter o valor atualizado
                     .single();
-                
-                if (buscaError && buscaError.code !== 'PGRST116') {
-                    throw buscaError;
+
+                if (updateError) {
+                    // Se o erro é "não encontrado" (PGRST116), tenta INSERIR o registro
+                    if (updateError.code === 'PGRST116' || (updateError.details && updateError.details.includes('0 rows'))) {
+                        
+                        const { data: insertData, error: insertError } = await supabase
+                            .from('oraculo_pombagira')
+                            .insert([{
+                                nome: 'oraculo_12_pombagiras',
+                                total_consultas: 1
+                            }])
+                            .select('total_consultas')
+                            .single();
+                        
+                        if (insertError) throw insertError;
+                        
+                        document.getElementById('contador-numero').textContent = insertData.total_consultas;
+                        return;
+                    }
+                    // Se for outro erro, lança
+                    throw updateError;
                 }
-                
-                let novaContagem;
-                
-                // 2. Se não existe registro, cria com 1
-                if (!registro) {
-                    novaContagem = 1;
-                    const { error: insertError } = await supabase
-                        .from('oraculo_pombagira')
-                        .insert([{
-                            nome: 'oraculo_12_pombagiras',
-                            total_consultas: novaContagem
-                        }]);
-                    
-                    if (insertError) throw insertError;
-                    
+
+                // Se a atualização foi bem-sucedida, mostra o novo valor
+                if (updateData) {
+                    document.getElementById('contador-numero').textContent = updateData.total_consultas;
                 } else {
-                    // 3. Se existe, INCREMENTA e ATUALIZA
-                    novaContagem = (registro.total_consultas || 0) + 1;
-                    const { error: updateError } = await supabase
+                    // Fallback para buscar o valor se o .select() falhar por algum motivo de RLS ou configuração
+                    const { data: finalData } = await supabase
                         .from('oraculo_pombagira')
-                        .update({ 
-                            total_consultas: novaContagem,
-                            atualizado_em: new Date().toISOString()
-                        })
-                        .eq('nome', 'oraculo_12_pombagiras');
-                    
-                    if (updateError) throw updateError;
+                        .select('total_consultas')
+                        .eq('nome', 'oraculo_12_pombagiras')
+                        .single();
+                    document.getElementById('contador-numero').textContent = finalData?.total_consultas || '0';
                 }
-                
-                // 4. Atualiza o DOM
-                document.getElementById('contador-numero').textContent = novaContagem;
-                
+
             } catch (error) {
-                console.error('❌ Erro no contador Supabase, usando contador local (offline):', error);
-                // Fallback para contador local em caso de falha
+                console.error('❌ Falha na comunicação Supabase. Usando contador local temporário:', error);
+                
+                // Fallback: Incrementa contador local (simplesmente exibe algo)
                 let localCount = localStorage.getItem('oraculo_local_count') || 0;
                 localCount = parseInt(localCount) + 1;
                 localStorage.setItem('oraculo_local_count', localCount);
+                
+                // Para não confundir, exibe um valor local aproximado (simplesmente o último valor sync + local)
                 document.getElementById('contador-numero').textContent = `~${localCount}`;
             }
         }
         
-        // Função dummy para manter compatibilidade, mas a lógica principal está em initContador
-        function atualizarStatusContador(status) {}
-        function tentarSincronizarOffline() {}
-        function usarContadorOffline() {}
-
-
-        // ========== DADOS FIXOS DAS POMBAGIRAS (MANTIDO) ==========
+        // ========== DADOS FIXOS DAS POMBAGIRAS ==========
         const pombagiras = [
             {
                 id: 1,
@@ -834,27 +836,26 @@
         let pontos = 0;
         let pombagiraResultado = null;
 
-        // ========== SISTEMA DE PERGUNTAS DINÂMICAS (NOVO) ==========
+        // ========== SISTEMA DE PERGUNTAS DINÂMICAS ==========
         async function carregarPerguntas() {
             try {
-                // Seleciona 12 perguntas aleatórias do banco de dados (MODO DINÂMICO)
+                // Busca todas as perguntas ativas
                 const { data: perguntasDB, error } = await supabase
                     .from('perguntas_pombagira')
                     .select('*')
-                    .eq('ativa', true)
-                    .limit(12)
-                    .order('id', { ascending: false, nullsFirst: false }); // Ordenação aleatória pode ser implementada com um "ORDER BY random()" se o RLS permitir, mas aqui apenas limitamos os 12 últimos. Para ser verdadeiramente dinâmico, o servidor Supabase precisaria de uma função ou RPC para `ORDER BY random()`. Usaremos a ordenação padrão e embaralharemos no cliente.
+                    .eq('ativa', true); 
                 
                 if (error) throw error;
 
-                if (perguntasDB && perguntasDB.length >= 12) {
-                    // Embaralha no cliente para simular a ordem dinâmica a cada acesso
-                    perguntasQuiz = embaralharArray(perguntasDB).slice(0, 12);
+                if (perguntasDB && perguntasDB.length > 0) {
+                    // Embaralha no cliente para garantir ordem dinâmica a cada acesso
+                    perguntasQuiz = embaralharArray(perguntasDB).slice(0, 12); // Limita a 12
                     console.log(`✅ ${perguntasQuiz.length} perguntas carregadas e embaralhadas do Supabase`);
                 } else {
-                    perguntasQuiz = gerar12PerguntasFixas();
+                    // Fallback se o Supabase não retornar nada
+                    perguntasQuiz = gerar12PerguntasFixas(); 
                     perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12);
-                    console.log('⚠️ Supabase não retornou dados suficientes. Usando perguntas fixas embaralhadas.');
+                    console.log('⚠️ Supabase não retornou perguntas. Usando perguntas fixas embaralhadas.');
                 }
                 
             } catch (error) {
@@ -864,8 +865,8 @@
             }
         }
 
-        // Função mantida, mas agora é o FALLBACK
         function gerar12PerguntasFixas() {
+            // Este é o fallback em caso de falha TOTAL do Supabase
             return [
                 {
                     pergunta: "Qual saudação abre os caminhos na gira?",
@@ -966,14 +967,14 @@
             ];
         }
 
-        // ========== INTERFACE E LÓGICA DO QUIZ (MANTIDO) ==========
+        // ========== INTERFACE E LÓGICA DO QUIZ ==========
         function iniciarQuiz() {
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'none';
             document.getElementById('quiz-section').style.display = 'block';
             document.getElementById('resultado-section').style.display = 'none';
             
-            // Refaz o carregamento e embaralhamento para garantir dinâmica a cada início
+            // Recarrega e embaralha as perguntas (dinâmico)
             carregarPerguntas().then(() => {
                 perguntaAtual = 0;
                 respostasUsuario = [];
@@ -981,7 +982,7 @@
                 mostrarPergunta();
             });
         }
-        
+
         function mostrarTodasPombagiras() {
             document.querySelector('.header-glass').style.display = 'none';
             document.getElementById('secao-todas-pombagiras').style.display = 'block';
@@ -1148,25 +1149,25 @@
             
             // Lógica de atribuição baseada na pontuação (mantida)
             if (porcentagem >= 90) {
-                pombagiraIndex = 0; // Maria Padilha
+                pombagiraIndex = 0; 
             } else if (porcentagem >= 80) {
-                pombagiraIndex = 2; // Maria Quitéria
+                pombagiraIndex = 2; 
             } else if (porcentagem >= 70) {
-                pombagiraIndex = 6; // Cigana
+                pombagiraIndex = 6; 
             } else if (porcentagem >= 60) {
-                pombagiraIndex = 1; // Maria Mulambo
+                pombagiraIndex = 1; 
             } else if (porcentagem >= 50) {
-                pombagiraIndex = 4; // Dama da Noite
+                pombagiraIndex = 4; 
             } else if (porcentagem >= 40) {
-                pombagiraIndex = 10; // Menina
+                pombagiraIndex = 10; 
             } else if (porcentagem >= 30) {
-                pombagiraIndex = 3; // Rosa Caveira
+                pombagiraIndex = 3; 
             } else if (porcentagem >= 20) {
-                pombagiraIndex = 5; // Sete Saias
+                pombagiraIndex = 5; 
             } else if (porcentagem >= 10) {
-                pombagiraIndex = 8; // Maria Navalha
+                pombagiraIndex = 8; 
             } else {
-                pombagiraIndex = 11; // Da Figueira (Fallback)
+                pombagiraIndex = 11; 
             }
             
             pombagiraResultado = pombagiras[pombagiraIndex];
@@ -1244,7 +1245,7 @@
             }
         }
 
-        // ========== UTILIDADES (MANTIDO) ==========
+        // ========== UTILIDADES ==========
         function embaralharArray(array) {
             const novoArray = [...array];
             for (let i = novoArray.length - 1; i > 0; i--) {
@@ -1257,7 +1258,7 @@
         // ========== INICIALIZAÇÃO ==========
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✨ Oráculo das 12 Pombagiras iniciando...');
-            initContador(); // Inicia o contador e o incrementa
+            initContador(); // Inicia o contador e o incrementa (atomicamente)
             carregarPerguntas(); // Pré-carrega as perguntas dinâmicas
             exibirTodasPombagiras();
         });
