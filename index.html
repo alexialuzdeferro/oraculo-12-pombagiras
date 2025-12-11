@@ -406,6 +406,8 @@
             display: flex;
             gap: 20px;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .botao-glass {
@@ -419,6 +421,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-width: 200px;
         }
 
         .botao-glass::before {
@@ -459,6 +462,19 @@
         .botao-secundario:hover {
             transform: translateY(-3px);
             box-shadow: var(--sombra-vidro-intensa);
+        }
+
+        .botao-voltar {
+            background: linear-gradient(135deg, #4a148c, #7b1fa2);
+            color: white;
+            border: 1px solid rgba(123, 31, 162, 0.3);
+        }
+
+        .botao-voltar:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 25px rgba(123, 31, 162, 0.3),
+                0 0 30px rgba(123, 31, 162, 0.2);
         }
 
         /* ========== RESULTADO SECTION ========== */
@@ -533,6 +549,12 @@
                 padding: 8px 15px;
                 font-size: 12px;
             }
+            
+            .botao-glass {
+                padding: 12px 25px;
+                min-width: 160px;
+                font-size: 0.9rem;
+            }
         }
 
         /* ========== ANIMAÇÕES ========== */
@@ -565,11 +587,11 @@
         <!-- Header -->
         <header class="header-glass glass-panel-roxo animar-entrada">
             <h1 class="titulo-principal">Oráculo das 12 Pombagiras</h1>
-            <p class="subtitulo">13 Perguntas para Revelar sua Guia Espiritual</p>
+            <p class="subtitulo">12 Perguntas para Revelar sua Guia Espiritual</p>
             
             <div class="quiz-botoes" style="margin-top: 30px;">
                 <button class="botao-glass botao-principal" onclick="iniciarQuiz()">
-                    🔮 Iniciar Consulta (13 Perguntas)
+                    🔮 Iniciar Consulta (12 Perguntas)
                 </button>
                 <button class="botao-glass botao-secundario" onclick="mostrarTodasPombagiras()">
                     👑 Conhecer Todas as 12 Pombagiras
@@ -578,8 +600,16 @@
         </header>
 
         <!-- Seção de Todas as Pombagiras (Inicialmente oculta) -->
-        <div id="secao-todas-pombagiras" class="secao-pombagiras" style="display: none;">
-            <!-- As 12 Pombagiras serão inseridas aqui via JavaScript -->
+        <div id="secao-todas-pombagiras" class="animar-entrada" style="display: none;">
+            <div class="quiz-botoes" style="margin-bottom: 30px;">
+                <button class="botao-glass botao-voltar" onclick="voltarParaInicio()">
+                    ← Voltar ao Início
+                </button>
+            </div>
+            
+            <div class="secao-pombagiras" id="container-pombagiras">
+                <!-- As 12 Pombagiras serão inseridas aqui via JavaScript -->
+            </div>
         </div>
 
         <!-- Seção do Quiz -->
@@ -605,8 +635,8 @@
             
             <div id="progresso-container" style="margin-top: 30px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Progresso: Pergunta <span id="numero-pergunta">1</span> de 13</span>
-                    <span id="contador-perguntas">1/13</span>
+                    <span>Progresso: Pergunta <span id="numero-pergunta">1</span> de 12</span>
+                    <span id="contador-perguntas">1/12</span>
                 </div>
                 <div style="height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden;">
                     <div id="barra-progresso" style="height: 100%; width: 0%; background: var(--gradiente-fogo); transition: width 0.3s ease;"></div>
@@ -626,8 +656,8 @@
                 <button class="botao-glass botao-principal" onclick="compartilharResultado()">
                     📱 Compartilhar Resultado
                 </button>
-                <button class="botao-glass botao-secundario" onclick="novaConsulta()">
-                    🔄 Nova Consulta
+                <button class="botao-glass botao-secundario" onclick="voltarParaInicio()">
+                    🏠 Voltar ao Início
                 </button>
             </div>
         </div>
@@ -636,8 +666,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ========== CONFIGURAÇÃO SUPABASE ==========
-        const SUPABASE_URL = 'https://qgnprifuachmfxoaalax.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnbnByaWZ1YWNobWZ4b2FhbGF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzODU5MDcsImV4cCI6MjA4MDk2MTkwN30.sKSYFhcI-zflr9RUKXpWF0_5sc6foDG7yxdEirtE0W4';
+        const SUPABASE_URL = 'https://qvbjwzszdijhydgcqvyu.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2Ymp3enN6ZGlqaHlkZ2Nxdnl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3Nzc1MDMsImV4cCI6MjA0ODM1MzUwM30._Wl_lGogge0q4qgCQT7M7XlABKf63JokQH9yU3K_b88';
         
         // Nome da tabela para o novo oráculo
         const ORACULO_NOME = 'oraculo_12_pombagiras';
@@ -828,9 +858,6 @@
             try {
                 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 
-                // Criar tabela se não existir
-                await criarTabelaContador(supabase);
-                
                 // Verificar se já visitou nesta sessão
                 if (!sessionStorage.getItem('oraculo_12_visitado')) {
                     await incrementarContador(supabase);
@@ -845,11 +872,6 @@
                 console.warn('⚠️ Modo offline:', error.message);
                 usarContadorOffline();
             }
-        }
-
-        async function criarTabelaContador(supabase) {
-            // Esta função será executada no Supabase SQL Editor
-            // Não precisa ser chamada aqui no frontend
         }
 
         async function incrementarContador(supabase) {
@@ -966,25 +988,26 @@
                     .from('perguntas_pombagira')
                     .select('*')
                     .eq('ativa', true)
-                    .order('nivel_dificuldade');
+                    .order('nivel_dificuldade')
+                    .limit(12);
                 
-                if (!error && perguntasDB && perguntasDB.length >= 13) {
-                    // Se tiver 13+ perguntas no banco, usar elas
+                if (!error && perguntasDB && perguntasDB.length >= 12) {
+                    // Se tiver 12+ perguntas no banco, usar elas
                     perguntasQuiz = perguntasDB;
                     console.log(`✅ ${perguntasQuiz.length} perguntas carregadas do Supabase`);
                 } else {
-                    // Usar perguntas fixas como fallback (agora com 13 perguntas!)
-                    perguntasQuiz = gerar13PerguntasFixas();
-                    console.log('📱 Usando 13 perguntas fixas');
+                    // Usar perguntas fixas como fallback (agora com 12 perguntas!)
+                    perguntasQuiz = gerar12PerguntasFixas();
+                    console.log('📱 Usando 12 perguntas fixas');
                 }
                 
             } catch (error) {
                 console.error('Erro ao carregar perguntas:', error);
-                perguntasQuiz = gerar13PerguntasFixas();
+                perguntasQuiz = gerar12PerguntasFixas();
             }
         }
 
-        function gerar13PerguntasFixas() {
+        function gerar12PerguntasFixas() {
             return [
                 {
                     pergunta: "Qual saudação abre os caminhos na gira?",
@@ -1105,16 +1128,6 @@
                     nivel_dificuldade: 1,
                     tema: "tempo",
                     explicacao: "Dama da Noite trabalha com os mistérios e segredos que surgem à noite."
-                },
-                {
-                    pergunta: "Qual elemento rege Pombagira Menina?",
-                    opcao_a: "Terra",
-                    opcao_b: "Ar",
-                    opcao_c: "Fogo",
-                    resposta_correta: "b",
-                    nivel_dificuldade: 3,
-                    tema: "elementos",
-                    explicacao: "Pombagira Menina está ligada ao elemento Ar, que representa renovação e novos começos."
                 }
             ];
         }
@@ -1127,8 +1140,8 @@
             document.getElementById('quiz-section').style.display = 'block';
             document.getElementById('resultado-section').style.display = 'none';
             
-            // Embaralhar perguntas e pegar 13
-            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 13); // 13 PERGUNTAS!
+            // Embaralhar perguntas e pegar 12
+            perguntasQuiz = embaralharArray(perguntasQuiz).slice(0, 12); // AGORA É 12 PERGUNTAS!
             
             // Iniciar primeira pergunta
             perguntaAtual = 0;
@@ -1140,13 +1153,13 @@
 
         function mostrarTodasPombagiras() {
             document.querySelector('.header-glass').style.display = 'none';
-            document.getElementById('secao-todas-pombagiras').style.display = 'grid';
+            document.getElementById('secao-todas-pombagiras').style.display = 'block';
             document.getElementById('quiz-section').style.display = 'none';
             document.getElementById('resultado-section').style.display = 'none';
         }
 
         function exibirTodasPombagiras() {
-            const container = document.getElementById('secao-todas-pombagiras');
+            const container = document.getElementById('container-pombagiras');
             container.innerHTML = '';
             
             pombagiras.forEach(pombagira => {
@@ -1195,8 +1208,15 @@
             });
         }
 
+        function voltarParaInicio() {
+            document.querySelector('.header-glass').style.display = 'block';
+            document.getElementById('secao-todas-pombagiras').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('resultado-section').style.display = 'none';
+        }
+
         function mostrarPergunta() {
-            if (perguntaAtual >= 13) { // AGORA É 13!
+            if (perguntaAtual >= 12) { // AGORA É 12!
                 finalizarQuiz();
                 return;
             }
@@ -1229,10 +1249,10 @@
             
             // Atualizar progresso
             document.getElementById('contador-perguntas').textContent = 
-                `${perguntaAtual + 1}/13`; // FIXO EM 13!
+                `${perguntaAtual + 1}/12`; // FIXO EM 12!
             
             document.getElementById('barra-progresso').style.width = 
-                `${((perguntaAtual + 1) / 13) * 100}%`; // FIXO EM 13!
+                `${((perguntaAtual + 1) / 12) * 100}%`; // FIXO EM 12!
             
             // Esconder botão próximo
             document.getElementById('proxima-btn').style.display = 'none';
@@ -1307,10 +1327,10 @@
 
         function finalizarQuiz() {
             // Calcular Pombagira baseado nos pontos
-            const maxPontos = 13 * 30; // 13 perguntas * máximo 30 pontos cada
+            const maxPontos = 12 * 30; // 12 perguntas * máximo 30 pontos cada
             const porcentagem = (pontos / maxPontos) * 100;
             
-            // Determinar Pombagira baseado na pontuação (agora mais preciso com 13 perguntas)
+            // Determinar Pombagira baseado na pontuação (agora mais preciso com 12 perguntas)
             let pombagiraIndex;
             
             if (porcentagem >= 90) {
@@ -1395,35 +1415,10 @@
                     </div>
                 </div>
             `;
-            
-            // Registrar resultado no Supabase (opcional)
-            registrarResultadoConsulta();
-        }
-
-        async function registrarResultadoConsulta() {
-            try {
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                
-                const { error } = await supabase
-                    .from('resultados_oraculo')
-                    .insert([{
-                        session_id: sessionStorage.getItem('session_id') || 'anonimo',
-                        score: pontos,
-                        pombagira_id: pombagiraResultado.id,
-                        respostas: respostasUsuario
-                    }]);
-                
-                if (!error) {
-                    console.log('✅ Resultado registrado no Supabase');
-                }
-                
-            } catch (error) {
-                console.error('Erro ao registrar resultado:', error);
-            }
         }
 
         function compartilharResultado() {
-            const texto = `🔮 ORÁCULO DAS 12 POMBAGIRAS 🔮\n\nApós 13 perguntas sagradas, descobri minha Pombagira Guia!\n\n🏆 Minha guia é: ${pombagiraResultado.nome}\n📜 Domínio: ${pombagiraResultado.dominio}\n⭐ Pontuação: ${pontos} pontos\n\n"${pombagiraResultado.mensagemAudio}"\n\nFaça sua consulta espiritual também!`;
+            const texto = `🔮 ORÁCULO DAS 12 POMBAGIRAS 🔮\n\nApós 12 perguntas sagradas, descobri minha Pombagira Guia!\n\n🏆 Minha guia é: ${pombagiraResultado.nome}\n📜 Domínio: ${pombagiraResultado.dominio}\n⭐ Pontuação: ${pontos} pontos\n\n"${pombagiraResultado.mensagemAudio}"\n\nFaça sua consulta espiritual também!`;
             
             if (navigator.share) {
                 navigator.share({
@@ -1437,10 +1432,6 @@
             }
         }
 
-        function novaConsulta() {
-            location.reload();
-        }
-
         // ========== UTILIDADES ==========
         function embaralharArray(array) {
             const novoArray = [...array];
@@ -1450,47 +1441,6 @@
             }
             return novoArray;
         }
-
-        // ========== SQL PARA 13+ PERGUNTAS ==========
-        window.criarTabela13Perguntas = function() {
-            const sql = `
-            -- Criar tabela de perguntas para o oráculo das 12 Pombagiras
-            CREATE TABLE IF NOT EXISTS perguntas_pombagira (
-              id SERIAL PRIMARY KEY,
-              pergunta TEXT NOT NULL,
-              opcao_a TEXT NOT NULL,
-              opcao_b TEXT NOT NULL,
-              opcao_c TEXT NOT NULL,
-              resposta_correta CHAR(1) CHECK (resposta_correta IN ('a', 'b', 'c')),
-              nivel_dificuldade INTEGER DEFAULT 1,
-              tema VARCHAR(50),
-              explicacao TEXT,
-              ativa BOOLEAN DEFAULT TRUE,
-              criada_em TIMESTAMP DEFAULT NOW()
-            );
-
-            -- Inserir 13 perguntas iniciais
-            INSERT INTO perguntas_pombagira 
-            (pergunta, opcao_a, opcao_b, opcao_c, resposta_correta, nivel_dificuldade, tema, explicacao) VALUES
-            ('Qual saudação abre os caminhos na gira?', 'Saravá', 'Laroyê Exu', 'Axé', 'b', 1, 'saudações', 'Laroyê Exu é a saudação que abre os caminhos e pede licença para trabalhar.'),
-            ('Maria Padilha atua principalmente em qual encruzilhada?', 'De terra', 'De vento', 'De fogo', 'a', 2, 'entidades', 'Maria Padilha atua nas encruzilhadas de terra, que são os caminhos da vida material.'),
-            ('Qual elemento representa Maria Mulambo?', 'Fogo', 'Terra', 'Água', 'b', 2, 'elementos', 'Maria Mulambo está ligada ao elemento Terra, que representa cura e estabilidade.'),
-            ('Qual dia da semana é mais forte para Pombagira Cigana?', 'Segunda-feira', 'Quarta-feira', 'Sexta-feira', 'b', 3, 'dias', 'Quarta-feira é o dia de Mercúrio, que rege a comunicação e viagens, perfeito para Pombagira Cigana.'),
-            ('O que simboliza a navalha de Maria Navalha?', 'Beleza', 'Defesa e astúcia', 'Riqueza', 'b', 2, 'símbolos', 'A navalha representa a capacidade de defesa e a astúcia necessária para sobreviver.'),
-            ('Qual Pombagira está ligada às águas e emoções?', 'Maria Padilha', 'Pombagira da Praia', 'Rosa Caveira', 'b', 1, 'elementos', 'Pombagira da Praia trabalha com as águas e a purificação emocional.'),
-            ('Qual Pombagira é conhecida como "Rainha das Encruzilhadas"?', 'Maria Mulambo', 'Maria Padilha', 'Pombagira Cigana', 'b', 1, 'títulos', 'Maria Padilha é chamada de Rainha das Encruzilhadas por seu poder de abrir caminhos.'),
-            ('Qual cor está mais associada a Rosa Caveira?', 'Azul', 'Preto e Vermelho', 'Verde', 'b', 2, 'cores', 'Rosa Caveira é representada pelas cores preto (morte) e vermelho (transformação).'),
-            ('Sete Saias representa qual energia principal?', 'Tristeza', 'Alegria e dança', 'Sério', 'b', 1, 'energias', 'Sete Saias traz a energia da alegria, dança e celebração da vida.'),
-            ('Pombagira da Figueira conecta com o quê?', 'Futuro', 'Ancestralidade', 'Viagens', 'b', 3, 'conexões', 'Pombagira da Figueira nos conecta com nossos antepassados e raízes familiares.'),
-            ('Qual oferenda é tradicional para Maria Navalha?', 'Champagne', 'Cachaça', 'Vinho', 'b', 2, 'oferendas', 'Maria Navalha aceita cachaça como oferenda, representando a força do povo.'),
-            ('Dama da Noite atua principalmente em qual período?', 'Manhã', 'Noite', 'Tarde', 'b', 1, 'tempo', 'Dama da Noite trabalha com os mistérios e segredos que surgem à noite.'),
-            ('Qual elemento rege Pombagira Menina?', 'Terra', 'Ar', 'Fogo', 'b', 3, 'elementos', 'Pombagira Menina está ligada ao elemento Ar, que representa renovação e novos começos.');
-            `;
-            
-            console.log('📋 SQL para criar tabela com 13 perguntas:');
-            console.log(sql);
-            alert('Copie o SQL acima e execute no SQL Editor do Supabase!');
-        };
     </script>
 </body>
 </html>
